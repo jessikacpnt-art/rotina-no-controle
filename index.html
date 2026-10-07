@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080b13" id="meta-theme-color">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <meta name="description" content="Rotina no Controle — Plataforma Integrada de Rotina e Nutrição Inteligente.">
+  <title>Rotina no Controle — Plataforma Integrada de Rotina e Organização</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500:'#10b981', 600:'#059669', 700:'#047857' },
+            accent:'#ec4899',
+            purple:'#8b5cf6',
+            cyan:'#06b6d4'
+          },
+          boxShadow: {
+            glow: '0 0 45px rgba(139,92,246,.2)',
+            emeraldGlow: '0 0 35px rgba(16,185,129,.2)'
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,system-ui,sans-serif;
+      background:#080b13;
+      color:#f3f4f6;
+      -webkit-tap-highlight-color:transparent;
+    }
+    button,input,select,textarea{font:inherit}
+    button{touch-action:manipulation}
+    .glass{
+      background:rgba(15,20,32,.78);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+    .glass-strong{
+      background:rgba(12,17,28,.94);
+      border:1px solid rgba(255,255,255,.1);
+      backdrop-filter:blur(22px);
+      -webkit-backdrop-filter:blur(22px);
+    }
+    .gradient{
+      background:linear-gradient(135deg,#ec4899 0%,#8b5cf6 48%,#3b82f6 100%);
+    }
+    .gradient-text{
+      background:linear-gradient(135deg,#f472b6,#a78bfa,#60a5fa);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .glow{
+      box-shadow:0 0 45px rgba(139,92,246,.18);
+    }
+    ::-webkit-scrollbar{width:5px;height:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:#263044;border-radius:999px}
+    input[type=time]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.65}
+    input:focus,select:focus,textarea:focus{outline:none}
+    .page-enter{animation:pageIn .35s ease both}
+    @keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .float{animation:float 5s ease-in-out infinite}
+    @keyframes float{50%{transform:translateY(-6px)}}
+    .pulse-soft{animation:pulseSoft 2.5s ease-in-out infinite}
+    .fitness-progress{transition:width .35s ease}
+    .hydration-drop{position:relative;overflow:hidden}
+    .hydration-drop::after{content:'';position:absolute;inset:auto 0 0 0;height:var(--fill,0%);background:linear-gradient(90deg,rgba(6,182,212,.05),rgba(16,185,129,.10));pointer-events:none;transition:height .45s ease}
+    .hydration-drop > *{position:relative;z-index:1}
+    .fitness-chip{border:1px solid rgba(16,185,129,.16);background:rgba(16,185,129,.07);color:#6ee7b7}
+    @keyframes pulseSoft{50%{box-shadow:0 0 0 8px rgba(139,92,246,0)}}
+    .toast-in{animation:toastIn .25s ease both}
+    @keyframes toastIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+    .toast-out{animation:toastOut .25s ease both}
+    @keyframes toastOut{to{opacity:0;transform:translate(-50%,-12px)}}
+    .task-done .task-title{text-decoration:line-through;opacity:.45}
+    .safe-bottom{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+    .nav-safe{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+    @media(min-width:768px){
+      .app-shell{max-width:760px}
+    }
+    .label{display:block;font-size:10px;font-weight:600;color:#9ca3af;margin-bottom:6px}
+    .input{
+      width:100%;background:rgba(3,7,18,.72);border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;padding:11px 13px;color:#fff;font-size:12px;transition:.2s;
+    }
+    .input::placeholder{color:#4b5563}
+    .input:focus{border-color:rgba(139,92,246,.65);box-shadow:0 0 0 3px rgba(139,92,246,.08)}
+    .field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#4b5563;font-size:12px}
+    .nav-btn{height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#5f6878;font-size:10px;font-weight:600;transition:.2s;border-radius:15px}
+    .nav-btn i{font-size:16px}
+    .nav-btn.active{color:#34d399;background:rgba(16,185,129,.07)}
+    .nav-btn:hover{color:#d1d5db}
+
+    /* ===== TEMA CLARO / ESCURO ===== */
+    html.light body{background:#f4f7fb;color:#111827}
+    html.light .glass{background:rgba(255,255,255,.82);border-color:rgba(15,23,42,.08);}
+    html.light .glass-strong{background:rgba(255,255,255,.96);border-color:rgba(15,23,42,.10);}
+    html.light .input{background:rgba(255,255,255,.92);border-color:rgba(15,23,42,.10);color:#111827}
+    html.light .input::placeholder{color:#9ca3af}
+    html.light .field-icon{color:#9ca3af}
+    html.light .text-gray-100{color:#111827!important}
+    html.light .text-gray-200{color:#1f2937!important}
+    html.light .text-gray-300{color:#374151!important}
+    html.light .text-gray-400{color:#6b7280!important}
+    html.light .text-gray-500{color:#6b7280!important}
+    html.light .text-gray-600{color:#9ca3af!important}
+    html.light .text-gray-700{color:#6b7280!important}
+    html.light .bg-\[\#080b13\]{background:#f4f7fb!important}
+    html.light .bg-black\/80{background:rgba(255,255,255,.78)!important}
+    html.light .border-white\/5{border-color:rgba(15,23,42,.07)!important}
+    html.light .border-white\/10{border-color:rgba(15,23,42,.10)!important}
+    html.light .bg-white\/\[\.03\]{background:rgba(15,23,42,.03)!important}
+    html.light .bg-white\/\[\.04\]{background:rgba(15,23,42,.04)!important}
+    html.light .bg-white\/\[\.05\]{background:rgba(15,23,42,.05)!important}
+    html.light .bg-white\/\[\.06\]{background:rgba(15,23,42,.06)!important}
+    html.light .bg-white\/\[\.08\]{background:rgba(15,23,42,.08)!important}
+    html.light .shadow-purple-900\/30{--tw-shadow-color:rgba(109,40,217,.15)!important}
+    html.light .nav-btn{color:#6b7280}
+    html.light .nav-btn:hover{color:#374151}
+    html.light input[type=time]::-webkit-calendar-picker-indicator{filter:none}
+    .theme-toggle{position:relative;overflow:hidden}
+    /* ===== ALARMES ===== */
+    .alarm-modal-backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    html.light .alarm-modal-backdrop{background:rgba(15,23,42,.28)}
+    .range-input{width:100%;accent-color:#10b981}
+    .alarm-mode-btn{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#9ca3af}
+    .alarm-mode-btn.active{border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.12);color:#34d399;box-shadow:0 0 0 1px rgba(16,185,129,.08) inset}
+    html.light .alarm-mode-btn{border-color:rgba(15,23,42,.10);background:rgba(15,23,42,.04);color:#6b7280}
+    html.light .alarm-mode-btn.active{border-color:rgba(5,150,105,.35);background:rgba(16,185,129,.10);color:#047857}
+    .alarm-ring{animation:alarmRing .65s ease-in-out infinite alternate}
+    @keyframes alarmRing{from{transform:rotate(-4deg) scale(1)}to{transform:rotate(4deg) scale(1.05)}}
+  </style>
+
+<!-- SERVICE WORKER EMBUTIDO (mantido dentro deste único arquivo).
+     Observação: navegadores exigem que Service Workers sejam servidos por uma URL própria;
+     por isso este bloco preserva o código junto do HTML, mas não substitui um sw.js hospedado. -->
+<script id="embedded-service-worker" type="text/plain">
+const ALARM_NOTIFICATION_TAG = 'rotina-no-controle-alarm';
+
+self.addEventListener('install', () => self.skipWaiting());
+
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('message', event => {
+  const data = event.data || {};
+  if (data.type !== 'SHOW_ALARM') return;
+
+  const title = data.title || '⏰ Rotina no Controle';
+  const body = data.body || 'Hora da sua tarefa';
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      tag: `${ALARM_NOTIFICATION_TAG}-${data.taskId || Date.now()}`,
+      renotify: true,
+      requireInteraction: true,
+      silent: false,
+      vibrate: [400, 200, 400, 200, 800],
+      actions: [
+        { action: 'stop', title: 'PARAR' }
+      ],
+      data: {
+        type: 'ROTINA_ALARM',
+        taskId: data.taskId || ''
+      }
+    })
+  );
+});
+
+self.addEventListener('notificationclick', event => {
+  const notification = event.notification;
+  const action = event.action || 'open';
+  const data = notification.data || {};
+  notification.close();
+
+  event.waitUntil((async () => {
+    const clientsList = await self.clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true
+    });
+
+    if (action === 'stop') {
+      // Se o app/página estiver aberto em segundo plano, manda parar o áudio.
+      for (const client of clientsList) {
+        try {
+          client.postMessage({
+            type: 'ALARM_ACTION',
+            action: 'stop',
+            taskId: data.taskId || ''
+          });
+        } catch (e) {}
+      }
+
+      // Se não houver uma janela aberta, abre o app para que o estado do alarme
+      // possa ser sincronizado; a própria notificação já foi fechada acima.
+      if (!clientsList.length) {
+        try {
+          await self.clients.openWindow('./');
+        } catch (e) {}
+      }
+      return;
+    }
+
+    // Toque na notificação (fora do botão PARAR): abre/retorna ao app.
+    if (clientsList.length) {
+      try {
+        await clientsList[0].focus();
+        clientsList[0].postMessage({
+          type: 'ALARM_ACTION',
+          action: 'open',
+          taskId: data.taskId || ''
+        });
+        return;
+      } catch (e) {}
+    }
+
+    try {
+      await self.clients.openWindow('./');
+    } catch (e) {}
+  })());
+});
+
+</script>
+</head>
+
+<body class="min-h-screen bg-[#080b13] text-gray-100 selection:bg-purple-500/30">
+  <div id="toast-container" class="fixed top-4 left-1/2 z-[100] w-[calc(100%-28px)] max-w-md pointer-events-none"></div>
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-[#080b13] overflow-auto">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-24 -left-20 w-72 h-72 bg-purple-600/15 blur-3xl rounded-full"></div>
+      <div class="absolute -bottom-24 -right-20 w-80 h-80 bg-blue-600/15 blur-3xl rounded-full"></div>
+    </div>
+
+    <div class="glass-strong glow w-full max-w-md rounded-[30px] p-6 sm:p-7 relative page-enter">
+      <div class="text-center mb-6">
+        <div class="w-[70px] h-[70px] mx-auto rounded-[22px] gradient flex items-center justify-center shadow-2xl shadow-purple-900/30 mb-4 float">
+          <i class="fa-solid fa-wand-magic-sparkles text-3xl text-white"></i>
+        </div>
+        <h1 class="text-2xl font-extrabold tracking-tight">Rotina <span class="gradient-text">no Controle</span></h1>
+        <p class="text-xs text-gray-400 mt-2">Sua rotina, nutrição e organização diária simplificadas.</p>
+      </div>
+
+      <div id="auth-view-initial" class="space-y-3.5">
+        <button type="button" onclick="showAuthStep('signup')" class="w-full py-3.5 rounded-2xl gradient text-white font-bold text-sm shadow-xl shadow-purple-900/20 active:scale-[.98] transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-user-plus text-sm"></i>
+          <span>CRIAR CONTA</span>
+        </button>
+
+        <button type="button" onclick="showAuthStep('login')" class="w-full py-3.5 rounded-2xl bg-white/[.06] hover:bg-white/[.1] border border-white/10 text-white font-bold text-sm active:scale-[.98] transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket text-sm text-purple-400"></i>
+          <span>ENTRAR</span>
+        </button>
+
+        <div class="flex items-center gap-3 my-2">
+          <div class="h-px bg-white/10 flex-1"></div>
+          <span class="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">ou</span>
+          <div class="h-px bg-white/10 flex-1"></div>
+        </div>
+
+        <button type="button" onclick="enterAsGuest()" class="w-full py-3.5 rounded-2xl bg-emerald-600/95 hover:bg-emerald-500 text-white font-bold text-sm active:scale-[.98] transition border border-emerald-400/20 shadow-lg shadow-emerald-950/30 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-bolt text-amber-300"></i>
+          <span>CONTINUAR COMO CONVIDADO</span>
+        </button>
+      </div>
+
+      <div id="auth-view-signup" class="hidden space-y-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <button type="button" onclick="showAuthStep('initial')" class="text-xs text-gray-400 hover:text-white flex items-center gap-1">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </button>
+          <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Criar Conta</span>
+        </div>
+
+        <form onsubmit="handleSignupSubmit(event)" class="space-y-3">
+          <div>
+            <label class="label">Nome de usuário</label>
+            <div class="relative">
+              <i class="fa-solid fa-user field-icon"></i>
+              <input id="signup-username" type="text" autocomplete="username" placeholder="Digite seu nome de usuário" class="input pl-10">
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Gmail</label>
+            <div class="relative">
+              <i class="fa-solid fa-envelope field-icon"></i>
+              <input id="signup-gmail" type="email" autocomplete="email" placeholder="seuemail@gmail.com" class="input pl-10">
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Senha</label>
+            <div class="relative">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input id="signup-password" type="password" autocomplete="new-password" placeholder="Crie uma senha" class="input pl-10 pr-11">
+              <button type="button" onclick="togglePasswordVisibility('signup-password', 'signup-eye-1')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                <i id="signup-eye-1" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Confirmar senha</label>
+            <div class="relative">
+              <i class="fa-solid fa-shield-halved field-icon"></i>
+              <input id="signup-confirm-password" type="password" autocomplete="new-password" placeholder="Confirme sua senha" class="input pl-10 pr-11">
+              <button type="button" onclick="togglePasswordVisibility('signup-confirm-password', 'signup-eye-2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                <i id="signup-eye-2" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 rounded-2xl gradient text-white font-bold text-sm shadow-xl shadow-purple-900/20 active:scale-[.98] transition flex items-center justify-center gap-2 mt-4">
+            <span>Criar Conta e Entrar</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </form>
+
+        <p class="text-center text-xs text-gray-400 mt-3">
+          Já tem uma conta? <button type="button" onclick="showAuthStep('login')" class="text-purple-400 font-semibold underline ml-1">Entrar</button>
+        </p>
+      </div>
+
+      <div id="auth-view-login" class="hidden space-y-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <button type="button" onclick="showAuthStep('initial')" class="text-xs text-gray-400 hover:text-white flex items-center gap-1">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </button>
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Entrar</span>
+        </div>
+
+        <form onsubmit="handleLoginSubmit(event)" class="space-y-3">
+          <div>
+            <label class="label">Gmail</label>
+            <div class="relative">
+              <i class="fa-solid fa-envelope field-icon"></i>
+              <input id="login-gmail" type="email" autocomplete="email" placeholder="seuemail@gmail.com" class="input pl-10">
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Senha</label>
+            <div class="relative">
+              <i class="fa-solid fa-lock field-icon"></i>
+              <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••••" class="input pl-10 pr-11">
+              <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
+                <i id="login-eye" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl shadow-emerald-950/30 active:scale-[.98] transition flex items-center justify-center gap-2 mt-4">
+            <span>Entrar no aplicativo</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </form>
+
+        <p class="text-center text-xs text-gray-400 mt-3">
+          Ainda não tem conta? <button type="button" onclick="showAuthStep('signup')" class="text-emerald-400 font-semibold underline ml-1">Criar conta</button>
+        </p>
+      </div>
+
+      <p class="text-center text-[10px] text-gray-600 mt-5">Sua conta pode ser criada com Gmail e senha. Você poderá entrar novamente neste aparelho.</p>
+    </div>
+  </div>
+
+  <!-- MODAL DE PERFIL DO USUÁRIO -->
+  <div id="profile-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-strong glow w-full max-w-sm rounded-[28px] p-6 relative page-enter border border-white/10">
+      <button type="button" onclick="closeProfileModal()" class="absolute right-4 top-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center mb-5">
+        <div class="w-16 h-16 mx-auto rounded-full gradient flex items-center justify-center text-white text-2xl font-bold mb-3 shadow-lg shadow-purple-900/30" id="profile-avatar-icon">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <h3 class="text-lg font-extrabold" id="profile-display-name">Carregando...</h3>
+        <span id="profile-badge-type" class="inline-block mt-1 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">
+          Usuário
+        </span>
+      </div>
+
+      <div class="space-y-3 bg-black/30 rounded-2xl p-4 border border-white/5 mb-5 text-xs">
+        <div id="profile-row-username" class="flex justify-between items-center py-1.5 border-b border-white/5">
+          <span class="text-gray-400">Nome de usuário:</span>
+          <span class="font-bold text-gray-100" id="profile-val-username">-</span>
+        </div>
+        <div id="profile-row-gmail" class="flex justify-between items-center py-1.5 border-b border-white/5">
+          <span class="text-gray-400">Gmail:</span>
+          <span class="font-bold text-gray-100 truncate max-w-[180px]" id="profile-val-gmail">-</span>
+        </div>
+        <div class="flex justify-between items-center py-1.5">
+          <span class="text-gray-400">Tipo de conta:</span>
+          <span class="font-bold text-emerald-400" id="profile-val-type">-</span>
+        </div>
+      </div>
+
+      <button type="button" onclick="logout()" class="w-full py-3 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 font-bold text-xs transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Sair da conta</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- AVISO DE ALARME DISPARADO -->
+  <div id="alarm-ring-modal" class="fixed inset-0 z-[120] hidden flex items-center justify-center p-4 alarm-modal-backdrop">
+    <div class="glass-strong w-full max-w-sm rounded-[30px] p-6 text-center border border-emerald-500/20 shadow-2xl">
+      <div class="w-20 h-20 mx-auto rounded-[26px] bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mb-4 alarm-ring"><i class="fa-solid fa-bell"></i></div>
+      <div class="text-[10px] uppercase tracking-[.2em] text-emerald-400 font-bold">Alarme da rotina</div>
+      <h3 id="ring-task-title" class="text-xl font-extrabold mt-2">Tarefa</h3>
+      <div id="ring-task-time" class="text-4xl font-extrabold mt-2">08:00</div>
+      <p id="ring-mode-text" class="text-xs text-gray-500 mt-2">Alarme ativo</p>
+      <audio id="oxygen-alarm-audio" preload="auto" playsinline loop src="https://btones.b-cdn.net/fetch/f2/f250dff848476e38ccdbe151b879fb8a.mp3"></audio>
+      <button type="button" onclick="stopAlarm()" class="w-full mt-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition"><i class="fa-solid fa-stop mr-2"></i> Parar alarme</button>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div id="app" class="hidden">
+    <header class="sticky top-0 z-50 glass-strong border-x-0 border-t-0">
+      <div class="app-shell mx-auto px-4 py-3 flex items-center justify-between">
+        <button type="button" onclick="switchTab('rotina')" class="flex items-center gap-3 text-left">
+          <div class="w-10 h-10 rounded-[14px] gradient flex items-center justify-center shadow-lg shadow-purple-900/20">
+            <i class="fa-solid fa-wand-magic-sparkles text-white"></i>
+          </div>
+          <div>
+            <div class="font-extrabold leading-none text-sm sm:text-base">Rotina <span class="gradient-text">no Controle</span></div>
+            <div id="user-greeting" class="text-[10px] text-gray-500 mt-1">Olá, Convidado</div>
+          </div>
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="installPWA()" id="install-app-button" class="hidden w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/15 text-emerald-400 hover:bg-emerald-500/15 transition flex items-center justify-center" title="Instalar no celular" aria-label="Instalar no celular">
+            <i class="fa-solid fa-download text-sm"></i>
+          </button>
+          <button type="button" onclick="toggleTheme()" id="theme-toggle" class="theme-toggle w-10 h-10 rounded-xl bg-white/[.04] border border-white/5 text-amber-300 hover:text-amber-200 hover:bg-amber-500/10 transition flex items-center justify-center" title="Alternar tema">
+            <i id="theme-icon" class="fa-solid fa-sun text-base"></i>
+          </button>
+          <button type="button" onclick="openProfileModal()" class="w-10 h-10 rounded-xl bg-white/[.04] border border-white/5 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 transition flex items-center justify-center" title="Meu Perfil">
+            <i class="fa-solid fa-circle-user text-base"></i>
+          </button>
+          <button type="button" onclick="logout()" class="w-10 h-10 rounded-xl bg-white/[.04] border border-white/5 text-gray-400 hover:text-red-400 hover:border-red-500/20 transition flex items-center justify-center" title="Sair">
+            <i class="fa-solid fa-right-from-bracket text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- AVISO DE INSTALAÇÃO DO APP -->
+    <div id="install-app-banner" class="app-shell mx-auto px-4 pt-3">
+      <div class="relative overflow-hidden rounded-2xl border border-emerald-400/20 bg-gradient-to-r from-emerald-500/10 via-purple-500/10 to-cyan-500/10 px-4 py-3 shadow-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 shrink-0 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-sm font-extrabold">Instale o Rotina no Controle</div>
+            <div class="text-[11px] text-gray-400 mt-0.5">Tenha o app na tela inicial para abrir mais rápido.</div>
+          </div>
+          <button type="button" onclick="installPWA()" class="shrink-0 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-extrabold transition active:scale-95">
+            INSTALAR
+          </button>
+          <button type="button" onclick="dismissInstallBanner()" class="shrink-0 w-7 h-7 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition" aria-label="Fechar aviso">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <main class="app-shell mx-auto w-full px-4 pt-5 safe-bottom">
+      
+      <!-- ROTINA SECTION -->
+      <section id="tab-rotina" class="space-y-4 page-enter">
+        <div class="glass rounded-[24px] p-5 overflow-hidden relative glow">
+          <div class="absolute -right-12 -top-16 w-40 h-40 bg-purple-600/10 blur-3xl rounded-full"></div>
+          <div class="relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/15 text-emerald-400 text-[10px] font-bold uppercase tracking-wide">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-soft"></span> Otimização inteligente
+            </div>
+            <h2 class="text-2xl font-extrabold mt-4">Sua rotina no controle.</h2>
+            <p class="text-xs leading-5 text-gray-400 mt-2 max-w-lg">Organize suas tarefas e deixe o Rotina no Controle sequenciar o seu dia de forma produtiva.</p>
+            <button type="button" onclick="otimizarRotina()" class="mt-4 w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 font-bold text-sm transition active:scale-[.98] shadow-lg shadow-emerald-950/40 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>Otimizar minha rotina
+            </button>
+          </div>
+        </div>
+
+        <div id="ai-routine-feedback" class="hidden glass rounded-2xl p-4 border border-emerald-500/20 bg-emerald-950/20">
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-robot text-sm"></i></div>
+            <div><div class="text-xs font-bold text-emerald-400 mb-1">Sugestão do Rotina no Controle</div><div id="ai-routine-text" class="text-xs text-gray-300 leading-5"></div></div>
+          </div>
+        </div>
+
+        <div class="glass rounded-[22px] p-4">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-plus"></i></div>
+            <div><h3 class="text-sm font-bold">Nova tarefa</h3><p class="text-[10px] text-gray-500">Adicione algo ao seu dia</p></div>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="label">O que precisa fazer?</label>
+              <input id="task-input" class="input" placeholder="Ex: Treinar, estudar, ler um livro...">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="label">Horário / Alarme</label><input id="task-time" type="time" value="08:00" class="input"></div>
+              <div><label class="label">Prioridade</label><select id="task-priority" class="input"><option value="Baixa">🟢 Baixa</option><option value="Média" selected>🟠 Média</option><option value="Alta">🔴 Alta</option></select></div>
+            </div>
+
+            <div class="rounded-2xl bg-white/[.03] border border-white/5 p-3.5 space-y-3">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <div class="text-xs font-bold flex items-center gap-2"><i class="fa-solid fa-bell text-emerald-400"></i> Configurar alarme</div>
+                  <div class="text-[9px] text-gray-500 mt-0.5">Defina o som e o volume antes de salvar.</div>
+                </div>
+                <label class="flex items-center gap-2 text-[10px] font-semibold text-gray-400 cursor-pointer">
+                  <span>Ativo</span>
+                  <input id="task-alarm-enabled" type="checkbox" class="w-5 h-5 accent-emerald-500" checked>
+                </label>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="label !mb-0">Volume</label>
+                  <span id="task-alarm-volume-value" class="text-xs font-bold text-emerald-400">100%</span>
+                </div>
+                <input id="task-alarm-volume" type="range" min="0" max="100" value="100" class="range-input" oninput="updateTaskAlarmVolumeLabel(this.value)">
+              </div>
+              <div>
+                <label class="label">Modo do alarme</label>
+                <div class="grid grid-cols-1 gap-2">
+                  <button type="button" id="task-alarm-mode-sound" onclick="setTaskAlarmMode('sound')" class="alarm-mode-btn active rounded-xl py-2.5 text-[10px] font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-volume-high"></i><span>Som</span></button>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="testTaskAlarm()" class="py-2.5 rounded-xl bg-white/[.05] hover:bg-white/[.08] border border-white/5 text-[10px] font-bold transition"><i class="fa-solid fa-volume-high mr-1"></i> Testar som</button>
+                <button type="button" onclick="requestAlarmNotificationPermission(true)" id="notification-permission-button" class="py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/15 text-emerald-300 text-[10px] font-bold transition"><i class="fa-solid fa-bell mr-1"></i> Ativar aviso</button>
+              </div>
+              <div id="notification-status" class="text-[9px] text-gray-500 text-center">Avisos do sistema: verificando...</div>
+            </div>
+
+            <button type="button" onclick="addTarefa()" class="w-full py-3 rounded-2xl bg-white/[.05] hover:bg-white/[.08] border border-white/5 text-sm font-semibold transition active:scale-[.98]">+ Adicionar à lista</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between px-1 mb-2.5">
+            <h3 class="text-[11px] font-bold text-gray-500 uppercase tracking-[.16em]">Minhas tarefas</h3>
+            <span id="task-counter" class="text-[10px] text-gray-600">0 itens</span>
+          </div>
+          <div id="taskList" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- NUTRIÇÃO SECTION -->
+      <section id="tab-nutricao" class="hidden space-y-4 page-enter">
+        <div class="glass rounded-[24px] p-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/15 text-blue-400 text-[10px] font-bold uppercase tracking-wide">
+            <i class="fa-solid fa-leaf"></i> Nutrição inteligente
+          </div>
+          <h2 class="text-2xl font-extrabold mt-4">Crie uma refeição melhor.</h2>
+          <p class="text-xs leading-5 text-gray-400 mt-2">
+            Diga o que você quer comer e gere uma receita melhorada com uma estimativa de calorias por porção.
+          </p>
+        </div>
+
+        <div id="meal-cards" class="space-y-4"></div>
+
+        <button type="button" onclick="adicionarRefeicaoPersonalizada()"
+          class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 font-bold text-sm transition active:scale-[.98] flex items-center justify-center gap-2">
+          <i class="fa-solid fa-plus"></i> Adicionar refeição
+        </button>
+      </section>
+
+      <!-- SCANNER SECTION -->
+      <section id="tab-scanner" class="hidden space-y-4 page-enter">
+        <div class="glass rounded-[24px] p-5 text-center">
+          <div class="w-16 h-16 mx-auto rounded-[20px] bg-purple-500/10 border border-purple-500/15 text-purple-400 flex items-center justify-center text-2xl mb-4">
+            <i class="fa-solid fa-camera"></i>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/15 text-emerald-300 text-[10px] font-bold uppercase tracking-wide">
+            <i class="fa-solid fa-utensils"></i> Somente alimentos
+          </div>
+          <h2 class="text-2xl font-extrabold mt-3">Scanner de ingredientes</h2>
+          <p class="text-xs leading-5 text-gray-400 mt-2 mb-5">
+            Tire uma foto dos alimentos que você tem. A IA identifica os ingredientes, cria uma receita e mostra uma estimativa de calorias por porção.
+          </p>
+          <input id="camera-input" type="file" accept="image/*" capture="environment" class="hidden" onchange="processarFoto(event)">
+          <input id="gallery-input" type="file" accept="image/*" class="hidden" onchange="processarFoto(event)">
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" onclick="document.getElementById('camera-input').click()" class="py-3 rounded-2xl bg-purple-600 hover:bg-purple-500 font-bold text-sm transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-camera"></i>Câmera
+            </button>
+            <button type="button" onclick="document.getElementById('gallery-input').click()" class="py-3 rounded-2xl bg-white/[.05] hover:bg-white/[.08] border border-white/5 font-bold text-sm transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-image"></i>Galeria
+            </button>
+          </div>
+          <div class="mt-4 text-[10px] text-gray-600">Objetos, pessoas e imagens que não contenham alimentos serão recusados.</div>
+        </div>
+
+        <div id="scanner-preview" class="hidden glass rounded-[22px] p-4">
+          <img id="scanned-img" class="w-full max-h-72 object-cover rounded-2xl border border-white/5" alt="Foto dos ingredientes">
+          <div id="scanner-status" class="mt-3 p-3 rounded-xl bg-purple-500/10 border border-purple-500/15 text-xs text-purple-200 flex gap-2 items-center">
+            <i class="fa-solid fa-spinner fa-spin text-purple-400"></i><span>Analisando alimentos...</span>
+          </div>
+          <div id="scanner-results" class="hidden mt-3"></div>
+        </div>
+
+        <div class="glass rounded-[22px] p-4">
+          <div class="flex items-center justify-between gap-3 mb-3">
+            <div>
+              <div class="text-[10px] uppercase tracking-widest text-purple-400 font-bold">Memória do Scanner</div>
+              <h3 class="text-sm font-extrabold mt-1">Meus últimos scans</h3>
+              <p class="text-[10px] text-gray-500 mt-1">Cada conta Gmail tem sua própria memória. Convidado não salva nada.</p>
+            </div>
+            <span id="scanner-memory-counter" class="text-[9px] text-gray-600">0 scans</span>
+          </div>
+          <div id="scanner-history" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- COMPRAS SECTION - separada do Scanner -->
+      <section id="tab-compras" class="hidden space-y-4 page-enter">
+        <div class="rounded-[24px] p-5 overflow-hidden relative" style="background:linear-gradient(145deg,rgba(249,115,22,.14),rgba(255,255,255,.035));border:1px solid rgba(249,115,22,.16)">
+          <div class="relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/15 text-orange-300 text-[10px] font-bold uppercase tracking-wide">
+              <i class="fa-solid fa-clipboard-list"></i> Antes de ir ao mercado
+            </div>
+            <h2 class="text-2xl font-extrabold mt-4">Prepare sua compra.</h2>
+            <p class="text-xs leading-5 text-gray-400 mt-2">Monte sua lista em casa e, quando chegar ao mercado, ative o modo de compra para marcar tudo.</p>
+            <div class="grid grid-cols-2 gap-2 mt-4">
+              <button type="button" onclick="focusShoppingInput()" class="py-3 rounded-2xl bg-orange-600 hover:bg-orange-500 font-bold text-xs flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i>Criar lista</button>
+              <button type="button" onclick="openMarketMode()" class="py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 font-bold text-xs flex items-center justify-center gap-2"><i class="fa-solid fa-cart-shopping"></i>Estou no mercado</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-[24px] p-4">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-300 flex items-center justify-center"><i class="fa-solid fa-basket-shopping"></i></div>
+            <div><h3 class="text-sm font-bold">Adicionar à lista</h3><p class="text-[10px] text-gray-500">Preço não é obrigatório.</p></div>
+          </div>
+          <div class="grid grid-cols-[1fr_auto] gap-2">
+            <input id="shopping-item-input" class="input" placeholder="Ex: Arroz, sabonete, leite..." onkeydown="if(event.key==='Enter') addShoppingItem()">
+            <button type="button" onclick="addShoppingItem()" class="w-12 rounded-2xl bg-orange-600 font-bold flex items-center justify-center"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <div class="mt-2"><select id="shopping-category-input" class="input"><option>Mercado</option><option>Higiene</option><option>Limpeza</option><option>Bebidas</option><option>Outros</option></select></div>
+        </div>
+
+        <div class="glass rounded-[22px] p-4">
+          <div class="flex items-center justify-between mb-3"><div><h3 class="text-sm font-bold">Minha lista</h3><p id="shopping-counter" class="text-[10px] text-gray-500">0 itens</p></div><button type="button" onclick="clearShoppingList()" class="text-[10px] font-bold text-red-400 px-3 py-2 rounded-xl bg-red-500/5">Limpar</button></div>
+          <div id="shopping-list" class="space-y-2"></div>
+        </div>
+
+        <div id="shopping-market-view" class="hidden space-y-4">
+          <div class="rounded-[24px] p-5" style="background:linear-gradient(145deg,rgba(16,185,129,.12),rgba(255,255,255,.035));border:1px solid rgba(16,185,129,.18)">
+            <div class="flex items-center gap-3"><button type="button" onclick="closeMarketMode()" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10"><i class="fa-solid fa-arrow-left"></i></button><div><div class="text-[10px] uppercase tracking-widest text-emerald-300">Modo de compra</div><h2 class="text-xl font-extrabold">Estou no mercado 🛒</h2></div></div>
+            <div class="mt-4 flex items-end justify-between"><div><div id="market-progress-text" class="text-2xl font-extrabold">0 de 0</div><div class="text-[10px] text-gray-500">itens separados</div></div><button type="button" onclick="finishMarketMode()" class="px-3 py-2 rounded-xl bg-emerald-500/15 text-emerald-300 text-[10px] font-bold">Finalizar</button></div>
+            <div class="mt-3 h-2 bg-white/5 rounded-full overflow-hidden"><div id="market-progress-bar" class="h-full bg-emerald-400 rounded-full" style="width:0%"></div></div>
+          </div>
+          <div id="market-list" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- FITNESS SECTION -->
+      <section id="tab-fitness" class="hidden space-y-4 page-enter">
+        <div class="glass rounded-[24px] p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/15 text-emerald-300 text-[10px] font-bold uppercase tracking-wide">
+              <i class="fa-solid fa-dumbbell"></i> Treino de hoje
+            </div>
+            <span id="fitness-workout-summary" class="text-[9px] text-gray-500">0 min</span>
+          </div>
+          <p class="text-xs leading-5 text-gray-500 mt-2">Registre o que você fez e marque como concluído.</p>
+
+          <div class="mt-4 grid grid-cols-[1fr_84px] gap-2">
+            <select id="fitness-workout-type" class="input">
+              <option>Cardio</option>
+              <option>Musculação</option>
+              <option>Corrida</option>
+              <option>Caminhada</option>
+              <option>HIIT</option>
+              <option>Alongamento</option>
+              <option>Bicicleta</option>
+              <option>Natação</option>
+              <option>Outro</option>
+            </select>
+            <input id="fitness-workout-minutes" type="number" min="1" max="600" step="1" class="input" placeholder="min" inputmode="numeric">
+          </div>
+          <button type="button" onclick="addFitnessWorkout()" class="w-full mt-3 py-3 rounded-2xl bg-white/[.05] hover:bg-white/[.08] border border-white/5 text-sm font-semibold transition active:scale-[.98] flex items-center justify-center gap-2"><i class="fa-solid fa-plus"></i>Adicionar treino</button>
+
+          <div class="mt-5 flex items-center justify-between px-1 mb-2.5">
+            <h3 class="text-[11px] font-bold text-gray-500 uppercase tracking-[.16em]">Meus treinos</h3>
+            <span class="text-[9px] text-gray-600">toque no ✓ para concluir</span>
+          </div>
+          <div id="fitness-workout-list" class="space-y-2"></div>
+        </div>
+
+        <div class="rounded-[22px] p-4 border border-emerald-500/15 bg-emerald-500/5">
+          <div class="flex gap-3">
+            <div class="w-9 h-9 shrink-0 rounded-xl bg-emerald-500/10 text-emerald-300 flex items-center justify-center"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+              <div class="text-xs font-bold text-emerald-300">Dica prática</div>
+              <p class="text-[10px] text-gray-400 leading-4 mt-1">Use a água em pequenos registros ao longo do dia e marque o treino assim que terminar. O progresso fica salvo na sua conta.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASSISTENTE SECTION -->
+      <section id="tab-assistente" class="hidden page-enter">
+        <div class="glass rounded-[24px] p-4 h-[600px] flex flex-col">
+          <div class="flex items-center gap-3 pb-3 border-b border-white/5">
+            <div class="w-10 h-10 rounded-xl gradient flex items-center justify-center"><i class="fa-solid fa-robot"></i></div>
+            <div class="min-w-0 flex-1">
+              <h2 class="font-bold text-sm">Assistente Rotina no Controle</h2>
+              <div id="api-status-badge" class="text-[10px] text-gray-500">● Verificando conexão...</div>
+            </div>
+          </div>
+          <div id="chat-messages" class="flex-1 overflow-y-auto custom-scrollbar py-4 space-y-3"></div>
+          <div class="flex gap-2 pt-3 border-t border-white/5">
+            <input id="chat-input" class="input flex-1" placeholder="Pergunte sobre sua rotina ou receitas..." onkeydown="if(event.key==='Enter')sendChat()">
+            <button type="button" onclick="sendChat()" class="w-12 rounded-2xl gradient flex items-center justify-center active:scale-95 transition"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 glass-strong border-x-0 border-b-0 nav-safe">
+      <div class="app-shell mx-auto grid grid-cols-6 px-1 pt-2">
+        <button type="button" id="nav-rotina" onclick="switchTab('rotina')" class="nav-btn active"><i class="fa-solid fa-calendar-check"></i><span>Rotina</span></button>
+        <button type="button" id="nav-nutricao" onclick="switchTab('nutricao')" class="nav-btn"><i class="fa-solid fa-utensils"></i><span>Nutrição</span></button>
+        <button type="button" id="nav-scanner" onclick="switchTab('scanner')" class="nav-btn"><i class="fa-solid fa-camera"></i><span>Scanner</span></button>
+        <button type="button" id="nav-compras" onclick="switchTab('compras')" class="nav-btn"><i class="fa-solid fa-cart-shopping"></i><span>Compras</span></button>
+        <button type="button" id="nav-fitness" onclick="switchTab('fitness')" class="nav-btn"><i class="fa-solid fa-person-running"></i><span>Fitness</span></button>
+        <button type="button" id="nav-assistente" onclick="switchTab('assistente')" class="nav-btn"><i class="fa-solid fa-comments"></i><span>Assistente</span></button>
+      </div>
+    </nav>
+  </div>
+
+<script>
+'use strict';
+
+const STORAGE = {
+  usersList: 'rotina_users_accounts_v4',
+  currentUser: 'rotina_current_session_v4',
+  tasks: 'rotina_tasks_v4',
+  menu: 'rotina_menu_v4',
+  chatHistory: 'rotina_chat_history_v4', // prefixo; a chave final é separada por Gmail
+  scannerHistory: 'rotina_scanner_history_v1' // memória do Scanner, separada por Gmail
+};
+
+function safeGetStorage(key, defaultValue) {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : defaultValue;
+  } catch (e) {
+    console.warn(`[Rotina no Controle] Falha ao ler ${key}:`, e);
+    return defaultValue;
+  }
+}
+
+function safeSetStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.error(`[Rotina no Controle] Erro ao salvar ${key}:`, e);
+  }
+}
+
+let registeredUsers = safeGetStorage(STORAGE.usersList, []);
+if (!Array.isArray(registeredUsers)) registeredUsers = [];
+let currentUser = safeGetStorage(STORAGE.currentUser, null);
+if (!currentUser || typeof currentUser !== 'object') currentUser = null;
+
+// Dados da rotina são separados por conta. Convidado usa somente memória temporária.
+let tarefas = [];
+let mealRequests = {};
+let scannerHistory = [];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+
+function getDeviceStorageId() {
+  const key = 'rotina_public_device_id_v1';
+  try {
+    let id = localStorage.getItem(key);
+    if (!id) {
+      id = 'device_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem(key, id);
+    }
+    return id;
+  } catch (e) {
+    return 'session_' + Math.random().toString(36).slice(2);
+  }
+}
+
+function getAccountStorageSuffix() {
+  if (!currentUser) return null;
+  // Acesso público: cada aparelho recebe um espaço local próprio.
+  if (currentUser.isGuest) return 'public_' + encodeURIComponent(getDeviceStorageId());
+  if (!currentUser.gmail) return null;
+  return encodeURIComponent(String(currentUser.gmail).trim().toLowerCase());
+}
+
+function getAccountStorageKey(baseKey) {
+  const suffix = getAccountStorageSuffix();
+  return suffix ? `${baseKey}::${suffix}` : null;
+}
+
+function loadCurrentUserData() {
+  const suffix = getAccountStorageSuffix();
+
+  if (!suffix) {
+    resetGuestSessionData();
+    return;
+  }
+
+  // Rotina / Minhas tarefas: no modo Convidado, nunca carregar histórico persistido.
+  if (currentUser?.isGuest) {
+    tarefas = [];
+  } else {
+    tarefas = safeGetStorage(`${STORAGE.tasks}::${suffix}`, []);
+    if (!Array.isArray(tarefas)) tarefas = [];
+  }
+
+  // Nutrição: histórico/receitas não são mais persistidos.
+  // Mantém apenas o estado em memória desta sessão.
+  mealRequests = {};
+
+  // Scanner: histórico não é mais persistido.
+  // Mantém apenas o estado em memória desta sessão.
+  scannerHistory = [];
+
+  // Remove históricos antigos para impedir que voltem a aparecer.
+  try {
+    localStorage.removeItem(`rotina_meal_requests_v1::${suffix}`);
+    localStorage.removeItem(`${STORAGE.scannerHistory}::${suffix}`);
+  } catch (e) {}
+}
+
+function resetGuestSessionData() {
+  // Convidado: limpa o estado da sessão. Nenhum dado dos módulos comuns de convidado permanece salvo.
+  tarefas = [];
+  mealRequests = {};
+  scannerHistory = [];
+  guestShoppingList = [];
+  guestFitnessData = null;
+  conversationHistory = [];
+
+  // Limpa apenas dados antigos de Compras/Fitness do modo convidado da versão anterior.
+  // Scanner e Assistente permanecem intocados.
+  try {
+    const legacyGuestSuffix = 'public_' + encodeURIComponent(getDeviceStorageId());
+    localStorage.removeItem(`rotina_shopping_list_v1::${legacyGuestSuffix}`);
+    localStorage.removeItem(`rotina_fitness_v1::${legacyGuestSuffix}`);
+    localStorage.removeItem('rotina_shopping_list_v1');
+    localStorage.removeItem('rotina_fitness_v1');
+    localStorage.removeItem('rotina_scanner_history_v1');
+    localStorage.removeItem('rotina_scanner_history');
+
+    // Remove qualquer histórico antigo de tarefas do modo Convidado.
+    const guestTaskKey = `rotina_tasks_v4::${legacyGuestSuffix}`;
+    localStorage.removeItem(guestTaskKey);
+  } catch (e) {}
+
+  // Limpa a interface do Scanner imediatamente, quando disponível.
+  const preview = $('scanner-preview');
+  const results = $('scanner-results');
+  const img = $('scanned-img');
+  if (preview) preview.classList.add('hidden');
+  if (results) {
+    results.classList.add('hidden');
+    results.innerHTML = '';
+  }
+  if (img) img.removeAttribute('src');
+
+  renderScannerHistory();
+}
+
+function saveTasks() {
+  // Modo Convidado: Minhas tarefas ficam somente na memória desta sessão.
+  if (currentUser?.isGuest) return;
+
+  // Contas Gmail continuam salvando suas próprias tarefas normalmente.
+  const key = getAccountStorageKey(STORAGE.tasks);
+  if (!key) return;
+  safeSetStorage(key, tarefas);
+}
+
+function hashPassword(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0;
+  }
+  return 'h_' + Math.abs(hash).toString(36);
+}
+
+function isValidGmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(String(email).toLowerCase());
+}
+
+function showAuthStep(step) {
+  $('auth-view-initial').classList.toggle('hidden', step !== 'initial');
+  $('auth-view-signup').classList.toggle('hidden', step !== 'signup');
+  $('auth-view-login').classList.toggle('hidden', step !== 'login');
+}
+
+function togglePasswordVisibility(inputId, eyeId) {
+  const input = $(inputId);
+  if (!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
+  $(eyeId).className = input.type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+}
+
+function handleSignupSubmit(e) {
+  if (e) e.preventDefault();
+  
+  const username = $('signup-username').value.trim();
+  const gmail = $('signup-gmail').value.trim();
+  const password = $('signup-password').value;
+  const confirmPassword = $('signup-confirm-password').value;
+
+  if (!username) { showToast('Por favor, informe seu nome de usuário.', 'warning'); $('signup-username').focus(); return; }
+  if (!gmail) { showToast('Por favor, informe seu Gmail.', 'warning'); $('signup-gmail').focus(); return; }
+  if (!isValidGmail(gmail)) { showToast('Por favor, informe um endereço de Gmail/E-mail válido.', 'warning'); $('signup-gmail').focus(); return; }
+  if (!password) { showToast('Por favor, crie uma senha.', 'warning'); $('signup-password').focus(); return; }
+  if (password.length < 4) { showToast('A senha deve ter pelo menos 4 caracteres.', 'warning'); $('signup-password').focus(); return; }
+  if (!confirmPassword) { showToast('Por favor, confirme sua senha.', 'warning'); $('signup-confirm-password').focus(); return; }
+  if (password !== confirmPassword) { showToast('As senhas digitadas não correspondem.', 'warning'); $('signup-confirm-password').focus(); return; }
+
+  const existing = registeredUsers.find(u => String(u?.gmail || '').toLowerCase() === gmail.toLowerCase());
+  if (existing) { showToast('Este Gmail já está cadastrado. Faça login ou use outro Gmail.', 'warning'); return; }
+
+  const newUser = { username: username, gmail: gmail, passwordHash: hashPassword(password), accountType: 'Usuário', isGuest: false };
+  registeredUsers.push(newUser);
+  safeSetStorage(STORAGE.usersList, registeredUsers);
+
+  currentUser = { username: newUser.username, gmail: newUser.gmail, accountType: 'Usuário', isGuest: false };
+  safeSetStorage(STORAGE.currentUser, currentUser);
+
+  openApp();
+  showToast(`Conta criada com sucesso! Bem-vindo(a), ${newUser.username}!`, 'success');
+}
+
+function handleLoginSubmit(e) {
+  if (e) e.preventDefault();
+
+  const gmail = $('login-gmail').value.trim();
+  const password = $('login-password').value;
+
+  if (!gmail) { showToast('Digite seu Gmail.', 'warning'); $('login-gmail').focus(); return; }
+  if (!password) { showToast('Digite sua senha.', 'warning'); $('login-password').focus(); return; }
+
+  const targetHash = hashPassword(password);
+  const user = registeredUsers.find(u => String(u?.gmail || '').toLowerCase() === gmail.toLowerCase() && String(u?.passwordHash || '') === targetHash);
+
+  if (!user) { showToast('Gmail ou senha incorretos.', 'warning'); return; }
+
+  currentUser = { username: user.username, gmail: user.gmail, accountType: 'Usuário', isGuest: false };
+  safeSetStorage(STORAGE.currentUser, currentUser);
+
+  openApp();
+  showToast(`Login realizado! Bem-vindo(a) de volta, ${user.username}!`, 'success');
+}
+
+function enterAsGuest() {
+  // Troca explicitamente para uma sessão temporária e limpa todo estado anterior.
+  currentUser = { username: 'Convidado', gmail: '', accountType: 'Convidado', isGuest: true };
+  resetGuestSessionData();
+  openApp();
+  renderFitness();
+  renderShoppingList();
+  showToast('Acesso liberado. Seus dados ficam salvos neste aparelho.', 'success');
+}
+
+function openApp() {
+  // Entrada resiliente: um erro em um módulo não pode impedir a abertura do app.
+  try { loadCurrentUserData(); } catch (error) { console.error('Falha ao carregar dados da conta:', error); }
+
+  $('auth-screen')?.classList.add('hidden');
+  $('app')?.classList.remove('hidden');
+
+  const safeRun = (fn) => {
+    try { fn(); } catch (error) { console.error('Falha ao inicializar módulo:', error); }
+  };
+
+  safeRun(() => updateNotificationStatus());
+  safeRun(() => updateUserGreeting());
+  safeRun(() => renderTasks());
+  safeRun(() => renderMealCards());
+  safeRun(() => renderFitness());
+  safeRun(() => renderScannerHistory());
+  safeRun(() => initChat());
+}
+
+function updateUserGreeting() {
+  if (currentUser) {
+    $('user-greeting').textContent = currentUser.isGuest ? 'Modo Convidado' : `Olá, ${currentUser.username}`;
+  } else {
+    $('user-greeting').textContent = 'Olá, Visitante';
+  }
+}
+
+function openProfileModal() {
+  if (!currentUser) return;
+
+  if (currentUser.isGuest) {
+    $('profile-display-name').textContent = 'Convidado';
+    $('profile-badge-type').textContent = 'Convidado';
+    $('profile-badge-type').className = 'inline-block mt-1 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30';
+    $('profile-val-username').textContent = 'Convidado';
+    $('profile-val-gmail').textContent = 'Não cadastrado';
+    $('profile-val-type').textContent = 'Convidado';
+    $('profile-row-gmail').style.display = 'none';
+  } else {
+    $('profile-display-name').textContent = currentUser.username;
+    $('profile-badge-type').textContent = 'Usuário';
+    $('profile-badge-type').className = 'inline-block mt-1 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30';
+    $('profile-val-username').textContent = currentUser.username;
+    $('profile-val-gmail').textContent = currentUser.gmail;
+    $('profile-val-type').textContent = 'Usuário';
+    $('profile-row-gmail').style.display = 'flex';
+  }
+
+  $('profile-modal').classList.remove('hidden');
+}
+
+function closeProfileModal() {
+  $('profile-modal').classList.add('hidden');
+}
+
+function logout() {
+  clearCurrentUserChatState();
+  clearScannerSessionState(false);
+  tarefas = [];
+  mealRequests = {};
+  scannerHistory = [];
+  guestShoppingList = [];
+  guestFitnessData = null;
+  conversationHistory = [];
+  // Remove somente possíveis dados antigos de versões que não separavam por conta.
+  try {
+    localStorage.removeItem('rotina_shopping_list_v1');
+    localStorage.removeItem('rotina_fitness_v1');
+  } catch (e) {}
+
+  localStorage.removeItem(STORAGE.currentUser);
+  closeProfileModal();
+  currentUser = null;
+  $('auth-screen').classList.remove('hidden');
+  $('app').classList.add('hidden');
+  showAuthStep('initial');
+  
+  if ($('signup-username')) $('signup-username').value = '';
+  if ($('signup-gmail')) $('signup-gmail').value = '';
+  if ($('signup-password')) $('signup-password').value = '';
+  if ($('signup-confirm-password')) $('signup-confirm-password').value = '';
+  if ($('login-gmail')) $('login-gmail').value = '';
+  if ($('login-password')) $('login-password').value = '';
+
+  showToast('Sua sessão foi encerrada.', 'info');
+}
+
+function showToast(message, type = 'info') {
+  const box = document.createElement('div');
+  const styles = {
+    success: ['bg-emerald-950/95', 'border-emerald-500/30', 'text-emerald-200', 'fa-circle-check', 'text-emerald-400'],
+    warning: ['bg-amber-950/95', 'border-amber-500/30', 'text-amber-200', 'fa-triangle-exclamation', 'text-amber-400'],
+    info: ['bg-slate-950/95', 'border-white/10', 'text-gray-200', 'fa-circle-info', 'text-blue-400']
+  }[type] || [];
+  box.className = `toast-in pointer-events-auto mx-auto w-fit max-w-full rounded-2xl border px-4 py-3 shadow-2xl backdrop-blur-xl flex items-center gap-2 text-xs font-semibold ${styles.slice(0, 3).join(' ')}`;
+  box.innerHTML = `<i class="fa-solid ${styles[3]} ${styles[4]}"></i><span>${esc(message)}</span>`;
+  $('toast-container').appendChild(box);
+  setTimeout(() => { box.classList.remove('toast-in'); box.classList.add('toast-out'); setTimeout(() => box.remove(), 250); }, 2800);
+}
+
+
+/* ====================================================================
+   FITNESS: hidratação + treinos (adicionado sem alterar as áreas existentes)
+   ==================================================================== */
+let guestFitnessData = null;
+
+function fitnessTodayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function createDefaultFitnessData() {
+  return {
+    hydration: {
+      targetMl: 2000,
+      consumedMl: 0,
+      day: fitnessTodayKey(),
+      startTime: '08:00',
+      endTime: '20:00',
+      doseMl: 250,
+      schedule: []
+    },
+    workouts: []
+  };
+}
+
+function getFitnessStorageKey() {
+  return getAccountStorageKey('rotina_fitness_v1');
+}
+
+function normalizeFitnessData(raw) {
+  const base = createDefaultFitnessData();
+  const src = raw && typeof raw === 'object' ? raw : {};
+  const hyd = src.hydration && typeof src.hydration === 'object' ? src.hydration : {};
+  const data = {
+    hydration: {
+      ...base.hydration,
+      ...hyd,
+      targetMl: Math.max(500, Math.min(8000, Number(hyd.targetMl) || base.hydration.targetMl)),
+      consumedMl: Math.max(0, Number(hyd.consumedMl) || 0),
+      doseMl: Math.max(10, Math.min(5000, Math.round(Number(hyd.doseMl) || base.hydration.doseMl))),
+      schedule: Array.isArray(hyd.schedule) ? hyd.schedule : []
+    },
+    workouts: Array.isArray(src.workouts) ? src.workouts : []
+  };
+
+  if (data.hydration.day !== fitnessTodayKey()) {
+    data.hydration.day = fitnessTodayKey();
+    data.hydration.consumedMl = 0;
+  }
+  if (data.hydration.consumedMl > data.hydration.targetMl) {
+    data.hydration.consumedMl = data.hydration.targetMl;
+  }
+  return data;
+}
+
+function getFitnessData() {
+  if (currentUser?.isGuest) {
+    // Convidado: somente memória da sessão atual. Nunca lê do localStorage.
+    if (!guestFitnessData) guestFitnessData = createDefaultFitnessData();
+    return normalizeFitnessData(guestFitnessData);
+  }
+
+  // Gmail: somente a memória exclusiva daquele Gmail.
+  const key = getFitnessStorageKey();
+  if (!key) return createDefaultFitnessData();
+  return normalizeFitnessData(safeGetStorage(key, createDefaultFitnessData()));
+}
+
+function saveFitnessData(data) {
+  const normalized = normalizeFitnessData(data);
+
+  if (currentUser?.isGuest) {
+    // Convidado: mantém apenas em memória até sair do modo convidado.
+    guestFitnessData = normalized;
+    return normalized;
+  }
+
+  // Gmail: grava somente na chave exclusiva da conta.
+  const key = getFitnessStorageKey();
+  if (key) safeSetStorage(key, normalized);
+
+  return normalized;
+}
+
+function formatMl(value) {
+  const ml = Math.max(0, Math.round(Number(value) || 0));
+  return ml >= 1000 && ml % 1000 === 0 ? `${ml / 1000} L` : `${ml} ml`;
+}
+
+function formatLiters(valueMl) {
+  const ml = Math.max(0, Math.round(Number(valueMl) || 0));
+  const liters = ml / 1000;
+  return Number.isInteger(liters) ? `${liters} L` : `${liters.toFixed(2).replace('.', ',')} L`;
+}
+
+function minutesBetweenTimes(start, end) {
+  const [sh, sm] = String(start || '').split(':').map(Number);
+  const [eh, em] = String(end || '').split(':').map(Number);
+  if (![sh, sm, eh, em].every(Number.isFinite)) return null;
+  let a = sh * 60 + sm;
+  let b = eh * 60 + em;
+  if (b <= a) b += 24 * 60;
+  return b - a;
+}
+
+function addMinutesToTime(time, minutes) {
+  const [h, m] = String(time || '08:00').split(':').map(Number);
+  let total = (h * 60 + m + Math.round(minutes)) % (24 * 60);
+  if (total < 0) total += 24 * 60;
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+function previewHydrationGoal() {
+  const input = $('hydration-target');
+  const badge = $('hydration-goal-badge');
+  const value = Math.max(0.5, Math.min(8, Number(input?.value) || 2));
+  if (badge) badge.textContent = `Meta ${String(value).replace('.', ',')} L`;
+}
+
+function saveHydrationGoal(showFeedback = true) {
+  const input = $('hydration-target');
+  const data = getFitnessData();
+  const liters = Math.max(0.5, Math.min(8, Number(input?.value) || 2));
+  data.hydration.targetMl = Math.round(liters * 1000);
+  if (data.hydration.consumedMl > data.hydration.targetMl) data.hydration.consumedMl = data.hydration.targetMl;
+  data.hydration.schedule = [];
+  saveFitnessData(data);
+  renderHydration();
+  if (showFeedback) showToast(`Meta diária definida em ${formatLiters(data.hydration.targetMl)}.`, 'success');
+}
+
+function adjustHydration(delta) {
+  const data = getFitnessData();
+  const before = data.hydration.consumedMl;
+  data.hydration.consumedMl = Math.max(0, Math.min(data.hydration.targetMl, before + Number(delta || 0)));
+  saveFitnessData(data);
+  renderHydration();
+  if (delta > 0) showToast(`${formatMl(data.hydration.consumedMl - before)} registrados.`, 'success');
+}
+
+function resetHydrationToday() {
+  const data = getFitnessData();
+  if (!data.hydration.consumedMl) return;
+  if (confirm('Zerar o consumo de água de hoje?')) {
+    data.hydration.consumedMl = 0;
+    saveFitnessData(data);
+    renderHydration();
+    showToast('Consumo de água zerado para hoje.', 'info');
+  }
+}
+
+function generateHydrationSchedule(silent = false) {
+  const data = getFitnessData();
+  const start = $('hydration-start')?.value || data.hydration.startTime || '08:00';
+  const end = $('hydration-end')?.value || data.hydration.endTime || '20:00';
+  const rawDose = Number($('hydration-dose')?.value);
+  const dose = Math.max(10, Math.min(5000, Math.round(rawDose || data.hydration.doseMl || 250)));
+  const target = data.hydration.targetMl;
+  const duration = minutesBetweenTimes(start, end);
+
+  if (!duration || duration <= 0) {
+    showToast('Escolha um horário inicial e final válidos.', 'warning');
+    return;
+  }
+  if (dose > target) {
+    showToast('A quantidade por lembrete não pode ser maior que sua meta diária.', 'warning');
+    $('hydration-dose')?.focus();
+    return;
+  }
+
+  const doses = Math.max(1, Math.ceil(target / dose));
+  const interval = doses === 1 ? duration : duration / (doses - 1);
+  const schedule = Array.from({length: doses}, (_, index) => ({
+    time: addMinutesToTime(start, interval * index),
+    amountMl: index === doses - 1 ? Math.max(10, target - dose * (doses - 1)) : dose,
+    done: false
+  }));
+
+  data.hydration.startTime = start;
+  data.hydration.endTime = end;
+  data.hydration.doseMl = dose;
+  data.hydration.schedule = schedule;
+  saveFitnessData(data);
+  renderHydration();
+  if (!silent) showToast(`Plano criado: ${doses} lembretes ao longo do dia.`, 'success');
+}
+
+function registerHydrationFromSchedule(index) {
+  const data = getFitnessData();
+  const item = data.hydration.schedule?.[index];
+  if (!item) return;
+  if (item.done) {
+    item.done = false;
+    data.hydration.consumedMl = Math.max(0, data.hydration.consumedMl - Number(item.amountMl || 0));
+  } else {
+    item.done = true;
+    data.hydration.consumedMl = Math.min(data.hydration.targetMl, data.hydration.consumedMl + Number(item.amountMl || 0));
+  }
+  saveFitnessData(data);
+  renderHydration();
+}
+
+function renderHydration() {
+  const data = getFitnessData();
+  const h = data.hydration;
+  const percent = h.targetMl ? Math.min(100, Math.round(h.consumedMl / h.targetMl * 100)) : 0;
+  const remaining = Math.max(0, h.targetMl - h.consumedMl);
+  const targetInput = $('hydration-target');
+  if (targetInput) targetInput.value = String(h.targetMl / 1000);
+  const badge = $('hydration-goal-badge');
+  if (badge) badge.textContent = `Meta ${formatLiters(h.targetMl)}`;
+  const consumed = $('hydration-consumed');
+  if (consumed) consumed.textContent = formatMl(h.consumedMl);
+  const label = $('hydration-target-label');
+  if (label) label.textContent = `/ ${formatLiters(h.targetMl)}`;
+  const pct = $('hydration-percent');
+  if (pct) pct.textContent = `${percent}%`;
+  const bar = $('hydration-progress');
+  if (bar) bar.style.width = `${percent}%`;
+  const rem = $('hydration-remaining');
+  if (rem) rem.textContent = remaining ? `Faltam ${formatLiters(remaining)}` : 'Meta diária concluída';
+  const card = $('hydration-card');
+  if (card) card.style.setProperty('--fill', `${percent}%`);
+  if ($('hydration-start')) $('hydration-start').value = h.startTime || '08:00';
+  if ($('hydration-end')) $('hydration-end').value = h.endTime || '20:00';
+  if ($('hydration-dose')) $('hydration-dose').value = String(h.doseMl || 250);
+
+  const summary = $('hydration-plan-summary');
+  const scheduleEl = $('hydration-schedule');
+  if (!scheduleEl || !summary) return;
+  if (!h.schedule.length) {
+    summary.innerHTML = 'Defina os horários e clique em <b>Calcular</b> para gerar os lembretes automaticamente.';
+    scheduleEl.innerHTML = '';
+    return;
+  }
+  const interval = h.schedule.length > 1 ? minutesBetweenTimes(h.schedule[0].time, h.schedule[1].time) : 0;
+  const completed = h.schedule.filter(x => x.done).length;
+  summary.innerHTML = `<div class="flex items-center justify-between gap-3"><span><b>${h.schedule.length} lembretes</b> · ${formatMl(h.schedule[0].amountMl)} por registro</span><span class="text-emerald-300 font-bold">${completed}/${h.schedule.length}</span></div>${interval ? `<div class="mt-1 text-[9px] text-gray-600">Intervalo aproximado: ${interval >= 60 ? `${Math.floor(interval / 60)}h${Math.round(interval % 60) ? ` ${Math.round(interval % 60)}min` : ''}` : `${Math.round(interval)} min`}</div>` : ''}`;
+  scheduleEl.innerHTML = h.schedule.map((item, index) => `
+    <button type="button" onclick="registerHydrationFromSchedule(${index})" class="w-full rounded-2xl border ${item.done ? 'border-emerald-500/25 bg-emerald-500/10' : 'border-white/5 bg-white/[.025]'} p-3 flex items-center gap-3 text-left transition active:scale-[.99]">
+      <span class="w-10 h-10 rounded-xl ${item.done ? 'bg-emerald-500 text-white' : 'bg-cyan-500/10 text-cyan-300'} flex items-center justify-center text-[10px] font-extrabold">${item.done ? '<i class="fa-solid fa-check"></i>' : item.time}</span>
+      <span class="flex-1"><b class="block text-xs ${item.done ? 'line-through opacity-60' : ''}">${formatMl(item.amountMl)}</b><small class="text-[9px] text-gray-600">${item.done ? 'Registrado' : `Lembrete às ${item.time}`}</small></span>
+      <i class="fa-solid ${item.done ? 'fa-rotate-left text-gray-500' : 'fa-droplet text-cyan-400'} text-xs"></i>
+    </button>`).join('');
+}
+
+function addFitnessWorkout() {
+  const type = $('fitness-workout-type')?.value || 'Treino';
+  const minutes = Math.max(0, Math.min(600, Number($('fitness-workout-minutes')?.value) || 0));
+  if (!minutes) {
+    showToast('Informe a duração do treino em minutos.', 'warning');
+    $('fitness-workout-minutes')?.focus();
+    return;
+  }
+  const data = getFitnessData();
+  data.workouts.push({
+    id: Date.now(),
+    type,
+    minutes,
+    date: fitnessTodayKey(),
+    done: false
+  });
+  saveFitnessData(data);
+  $('fitness-workout-minutes').value = '';
+  renderFitnessWorkouts();
+  showToast(`${type} de ${minutes} min adicionado.`, 'success');
+}
+
+function toggleFitnessWorkout(id) {
+  const data = getFitnessData();
+  const workout = data.workouts.find(x => x.id === id);
+  if (!workout) return;
+  workout.done = !workout.done;
+  saveFitnessData(data);
+  renderFitnessWorkouts();
+}
+
+function deleteFitnessWorkout(id) {
+  const data = getFitnessData();
+  data.workouts = data.workouts.filter(x => x.id !== id);
+  saveFitnessData(data);
+  renderFitnessWorkouts();
+  showToast('Treino removido.', 'info');
+}
+
+function renderFitnessWorkouts() {
+  const list = $('fitness-workout-list');
+  if (!list) return;
+  const data = getFitnessData();
+  const today = fitnessTodayKey();
+  const workouts = data.workouts.filter(w => w.date === today);
+  const total = workouts.reduce((sum, w) => sum + (Number(w.minutes) || 0), 0);
+  const doneMinutes = workouts.filter(w => w.done).reduce((sum, w) => sum + (Number(w.minutes) || 0), 0);
+  const summary = $('fitness-workout-summary');
+  if (summary) summary.textContent = workouts.length ? `${doneMinutes}/${total} min concluídos` : '0 min';
+
+  if (!workouts.length) {
+    list.innerHTML = '<div class="rounded-2xl border border-dashed border-white/10 p-7 text-center text-gray-600 text-xs"><i class="fa-solid fa-person-running text-xl mb-2"></i><div>Nenhum treino registrado hoje.</div><span class="text-[10px]">Adicione seu primeiro treino acima.</span></div>';
+    return;
+  }
+
+  list.innerHTML = workouts.map(w => `
+    <div class="glass rounded-2xl p-3 flex items-center gap-3 ${w.done ? 'opacity-50' : ''}">
+      <button type="button" onclick="toggleFitnessWorkout(${w.id})" class="w-9 h-9 shrink-0 rounded-xl border ${w.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-white/10 text-gray-600'} flex items-center justify-center transition">
+        <i class="fa-solid fa-check text-xs"></i>
+      </button>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2"><span class="text-xs font-bold ${w.done ? 'line-through' : ''}">${esc(w.type)}</span><span class="text-[9px] text-gray-600">${Number(w.minutes) || 0} min</span></div>
+        <div class="text-[9px] text-gray-600 mt-1">${w.done ? 'Treino concluído' : 'Pendente'}</div>
+      </div>
+      <button type="button" onclick="deleteFitnessWorkout(${w.id})" class="w-8 h-8 rounded-lg text-gray-700 hover:text-red-400 hover:bg-red-500/10 transition" title="Excluir treino"><i class="fa-solid fa-trash-can text-xs"></i></button>
+    </div>`).join('');
+}
+
+function renderFitness() {
+  renderFitnessWorkouts();
+}
+
+let guestShoppingList = [];
+
+function getShoppingList(){
+  if (currentUser?.isGuest) {
+    // Convidado: somente memória da sessão atual. Nunca lê do localStorage.
+    return Array.isArray(guestShoppingList) ? guestShoppingList : [];
+  }
+
+  // Gmail: somente a lista exclusiva daquele Gmail.
+  const key = getAccountStorageKey('rotina_shopping_list_v1');
+  if (!key) return [];
+
+  const list = safeGetStorage(key, []);
+  return Array.isArray(list) ? list : [];
+}
+
+function saveShoppingList(list){
+  const cleanList = Array.isArray(list) ? list : [];
+
+  if (currentUser?.isGuest) {
+    // Convidado: mantém apenas em memória até sair do modo convidado.
+    guestShoppingList = cleanList;
+    return;
+  }
+
+  // Gmail: grava somente na chave exclusiva daquele Gmail.
+  const key = getAccountStorageKey('rotina_shopping_list_v1');
+  if (key) safeSetStorage(key, cleanList);
+}
+
+function focusShoppingInput(){
+  closeMarketMode();
+  const el=$('shopping-item-input');
+  if(el){
+    el.focus();
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+function renderShoppingList(){
+  const el=$('shopping-list');
+  const c=$('shopping-counter');
+  if(!el)return;
+
+  const list=getShoppingList();
+
+  if(c)c.textContent=`${list.filter(i=>!i.done).length} pendentes · ${list.length} no total`;
+
+  if(!list.length){
+    el.innerHTML='<div class="rounded-2xl border border-dashed border-white/10 p-7 text-center text-gray-600 text-xs">Sua lista está vazia.<br><span class="text-[10px]">Adicione os produtos que pretende comprar.</span></div>';
+    return;
+  }
+
+  el.innerHTML=list.map(i=>`
+    <div class="glass rounded-2xl p-3 flex items-center gap-3 ${i.done?'opacity-50':''}">
+      <button type="button" onclick="toggleShoppingItem(${i.id})" class="w-9 h-9 rounded-xl border ${i.done?'bg-orange-500 border-orange-500 text-white':'border-white/10 text-gray-600'}">
+        <i class="fa-solid fa-check text-xs"></i>
+      </button>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs font-semibold ${i.done?'line-through':''}">${esc(i.name)}</div>
+        <div class="text-[9px] text-gray-600">${esc(i.category)}</div>
+      </div>
+      <button type="button" onclick="deleteShoppingItem(${i.id})" class="w-8 h-8 text-gray-600 hover:text-red-400">
+        <i class="fa-solid fa-trash-can text-xs"></i>
+      </button>
+    </div>`).join('');
+}
+
+function addShoppingItem(){
+  const input=$('shopping-item-input');
+  const cat=$('shopping-category-input');
+  const name=input?.value.trim();
+
+  if(!name){
+    showToast('Digite um item para adicionar.','warning');
+    input?.focus();
+    return;
+  }
+
+  const list=getShoppingList();
+  list.push({
+    id: Date.now(),
+    name,
+    category: cat?.value || 'Mercado',
+    done: false
+  });
+
+  saveShoppingList(list);
+  renderShoppingList();
+  renderMarketMode();
+
+  input.value='';
+  showToast('Item adicionado à sua lista.','success');
+}
+
+function toggleShoppingItem(id){
+  const list=getShoppingList();
+  const item=list.find(i=>i.id===id);
+  if(!item)return;
+
+  item.done=!item.done;
+  saveShoppingList(list);
+  renderShoppingList();
+  renderMarketMode();
+}
+
+function deleteShoppingItem(id){
+  const list=getShoppingList().filter(i=>i.id!==id);
+  saveShoppingList(list);
+  renderShoppingList();
+  renderMarketMode();
+}
+
+function clearShoppingList(){
+  const list=getShoppingList();
+  if(!list.length)return;
+
+  if(confirm('Limpar toda a lista de compras?')){
+    saveShoppingList([]);
+    renderShoppingList();
+    renderMarketMode();
+  }
+}
+
+function openMarketMode(){
+  const list=getShoppingList();
+
+  if(!list.length){
+    showToast('Crie sua lista antes de entrar no modo de mercado.','warning');
+    focusShoppingInput();
+    return;
+  }
+
+  const marketView=$('shopping-market-view');
+  if(!marketView)return;
+
+  // Esconde apenas os três cards de planejamento da seção de Compras.
+  const cards=document.querySelectorAll('#tab-compras > *');
+  cards.forEach((card,index)=>{
+    card.classList.toggle('hidden', index < 3);
+  });
+
+  marketView.classList.remove('hidden');
+  renderMarketMode();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeMarketMode(){
+  const v=$('shopping-market-view');
+  if(v)v.classList.add('hidden');
+
+  const cards=document.querySelectorAll('#tab-compras > *');
+  cards.forEach((card,index)=>{
+    if(index < 3)card.classList.remove('hidden');
+  });
+}
+
+function renderMarketMode(){
+  const el=$('market-list');
+  const txt=$('market-progress-text');
+  const bar=$('market-progress-bar');
+  if(!el)return;
+
+  const list=getShoppingList();
+  const done=list.filter(i=>i.done).length;
+
+  if(txt)txt.textContent=`${done} de ${list.length}`;
+  if(bar)bar.style.width=`${list.length ? Math.round(done/list.length*100) : 0}%`;
+
+  if(!list.length){
+    el.innerHTML='<div class="rounded-2xl border border-dashed border-white/10 p-7 text-center text-gray-600 text-xs">Sua lista está vazia.</div>';
+    return;
+  }
+
+  el.innerHTML=list.map(i=>`
+    <button type="button" onclick="toggleShoppingItem(${i.id})"
+      class="w-full glass rounded-2xl p-4 flex items-center gap-3 text-left ${i.done?'opacity-50':''}">
+      <span class="w-11 h-11 rounded-2xl border ${i.done?'bg-emerald-500 border-emerald-500 text-white':'border-white/10 text-transparent'} flex items-center justify-center">
+        <i class="fa-solid fa-check"></i>
+      </span>
+      <span class="flex-1">
+        <b class="block text-sm ${i.done?'line-through text-gray-500':''}">${esc(i.name)}</b>
+        <small class="text-[9px] text-gray-600">${esc(i.category)}</small>
+      </span>
+    </button>`).join('');
+}
+
+function finishMarketMode(){
+  const list=getShoppingList();
+  const remaining=list.filter(i=>!i.done).length;
+
+  if(remaining){
+    showToast(`Ainda faltam ${remaining} ${remaining===1?'item':'itens'}.`,'warning');
+    return;
+  }
+
+  if(list.length){
+    showToast('Compra finalizada!','success');
+  }
+  closeMarketMode();
+}
+
+function switchTab(tab) {
+  ['rotina', 'nutricao', 'scanner', 'compras', 'fitness', 'assistente'].forEach(t => {
+    const section = $(`tab-${t}`);
+    if (section) section.classList.toggle('hidden', t !== tab);
+    const navBtn = $(`nav-${t}`);
+    if (navBtn) navBtn.classList.toggle('active', t === tab);
+  });
+  if (tab === 'nutricao') renderMealCards();
+  if (tab === 'scanner') renderScannerHistory();
+  if (tab === 'compras') { closeMarketMode(); renderShoppingList(); }
+  if (tab === 'fitness') renderFitness();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function priorityClass(p) {
+  return p === 'Alta' ? 'text-red-400 bg-red-500/10 border-red-500/10' :
+         p === 'Média' ? 'text-amber-400 bg-amber-500/10 border-amber-500/10' :
+         'text-emerald-400 bg-emerald-500/10 border-emerald-500/10';
+}
+
+function renderTasks() {
+  const list = $('taskList');
+  if (!list) return;
+  $('task-counter').textContent = `${tarefas.length} ${tarefas.length === 1 ? 'item' : 'itens'}`;
+  if (!tarefas.length) {
+    list.innerHTML = `<div class="glass rounded-2xl p-7 text-center text-gray-600"><i class="fa-regular fa-calendar-xmark text-2xl mb-2"></i><div class="text-xs">Nenhuma tarefa ainda.</div></div>`;
+    return;
+  }
+  const sorted = [...tarefas].sort((a, b) => (a.hora || '').localeCompare(b.hora || ''));
+  list.innerHTML = sorted.map(t => `
+    <div class="task ${t.feita ? 'task-done' : ''} glass rounded-2xl p-3 flex items-center gap-3 group">
+      <button type="button" onclick="toggleTask(${t.id})" class="w-9 h-9 shrink-0 rounded-xl border ${t.feita ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-white/10 text-gray-600'} flex items-center justify-center transition">
+        <i class="fa-solid fa-check text-xs"></i>
+      </button>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-bold text-gray-500">${esc(t.hora)}</span>
+          <span class="text-[9px] px-1.5 py-0.5 rounded-md border ${priorityClass(t.prioridade)}">${esc(t.prioridade)}</span>
+        </div>
+        <div class="task-title text-xs font-semibold text-gray-200 mt-1 truncate">${esc(t.titulo)}</div>
+      </div>
+      <button type="button" onclick="deleteTask(${t.id})" class="w-8 h-8 shrink-0 rounded-lg text-gray-700 hover:text-red-400 hover:bg-red-500/10 transition" title="Excluir tarefa"><i class="fa-solid fa-trash-can text-xs"></i></button>
+    </div>`).join('');
+}
+
+function addTarefa() {
+  const input = $('task-input');
+  const titulo = input.value.trim();
+  if (!titulo) { showToast('Digite o nome da tarefa.', 'warning'); input.focus(); return; }
+  unlockAlarmAudio();
+  const hora = $('task-time').value || '08:00';
+  const alarmEnabled = $('task-alarm-enabled').checked;
+  const alarmVolume = Number($('task-alarm-volume').value) || 100;
+  tarefas.push({
+    id: Date.now(),
+    titulo,
+    hora,
+    prioridade: $('task-priority').value,
+    feita: false,
+    alarme: { enabled: alarmEnabled, mode: taskAlarmMode, volume: alarmVolume, lastTriggered: '' }
+  });
+  saveTasks(); renderTasks(); input.value = '';
+  showToast(alarmEnabled ? `Tarefa salva para ${hora}. Alarme configurado.` : `Tarefa salva para ${hora}. Alarme desativado.`, 'success');
+  requestAlarmNotificationPermission();
+}
+function toggleTask(id) {
+  const t = tarefas.find(x => x.id === id);
+  if (t) { t.feita = !t.feita; saveTasks(); renderTasks(); if (t.feita) showToast('Tarefa concluída!', 'success'); }
+}
+
+function deleteTask(id) {
+  tarefas = tarefas.filter(x => x.id !== id);
+  saveTasks(); renderTasks(); showToast('Tarefa removida.', 'info');
+}
+
+function otimizarRotina() {
+  if (!tarefas.length) { showToast('Adicione tarefas primeiro.', 'warning'); return; }
+  const prioridade = { Alta: 0, Média: 1, Baixa: 2 };
+  tarefas.sort((a, b) => (prioridade[a.prioridade] ?? 1) - (prioridade[b.prioridade] ?? 1) || (a.hora || '').localeCompare(b.hora || ''));
+  saveTasks(); renderTasks();
+  const altas = tarefas.filter(t => t.prioridade === 'Alta' && !t.feita).length;
+  $('ai-routine-feedback').classList.remove('hidden');
+  $('ai-routine-text').textContent = altas
+    ? `Organizei suas tarefas priorizando as ${altas} de alta urgência. Tente focar nelas em blocos ininterruptos de tempo.`
+    : 'Sua lista está otimizada! Mantenha a sequência planejada e marque as tarefas concluídas.';
+  showToast('Rotina otimizada.', 'success');
+}
+
+/* ====================================================================
+   ALARMES E VOLUME
+   ==================================================================== */
+let taskAlarmMode = 'sound';
+let alarmAudioContext = null;
+let activeAlarmOscillators = [];
+let activeAlarmTimer = null;
+
+function normalizeAlarm(task) {
+  if (!task.alarme) task.alarme = { enabled: true, mode: 'sound', volume: 100, lastTriggered: '' };
+  if (task.alarme.enabled === undefined) task.alarme.enabled = true;
+  task.alarme.mode = 'sound';
+  if (typeof task.alarme.volume !== 'number') task.alarme.volume = 100;
+  task.alarme.volume = Math.max(0, Math.min(100, task.alarme.volume));
+  if (task.alarme.lastTriggered === undefined) task.alarme.lastTriggered = '';
+  return task.alarme;
+}
+
+tarefas.forEach(normalizeAlarm);
+saveTasks();
+
+
+let oxygenAlarmAudio = null;
+
+function getOxygenAlarmAudio() {
+  if (!oxygenAlarmAudio) oxygenAlarmAudio = $('oxygen-alarm-audio');
+  return oxygenAlarmAudio;
+}
+
+async function unlockAlarmAudio() {
+  try {
+    const audio = getOxygenAlarmAudio();
+    if (audio) {
+      audio.volume = 1;
+      audio.muted = false;
+      // Carrega o áudio sem iniciar automaticamente.
+      audio.load();
+    }
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) {
+      if (!alarmAudioContext) alarmAudioContext = new AC();
+      if (alarmAudioContext.state === 'suspended') await alarmAudioContext.resume();
+    }
+    return true;
+  } catch (e) {
+    console.warn('Áudio Oxygen indisponível:', e);
+    return false;
+  }
+}
+
+async function startAlarmSound(volume = 100) {
+  stopAlarmSound();
+  const audio = getOxygenAlarmAudio();
+  if (!audio) return false;
+
+  try {
+    audio.volume = 1; // volume máximo permitido pelo elemento; o volume real também depende do celular.
+    audio.muted = false;
+    audio.currentTime = 0;
+    await audio.play();
+    return true;
+  } catch (e) {
+    console.warn('Não foi possível iniciar o Oxygen:', e);
+    return false;
+  }
+}
+
+function stopAlarmSound() {
+  const audio = getOxygenAlarmAudio();
+  if (audio) {
+    try { audio.pause(); } catch (e) {}
+    try { audio.currentTime = 0; } catch (e) {}
+  }
+}
+
+function stopAlarm() {
+  stopAlarmSound();
+  $('alarm-ring-modal').classList.add('hidden');
+}
+
+async function triggerAlarm(task) {
+  window.__lastAlarmTask = task;
+  const alarm = normalizeAlarm(task);
+
+  // Tenta tocar o áudio imediatamente quando a página ainda está ativa.
+  if (alarm.mode === 'sound' || alarm.mode === 'both') {
+    await startAlarmSound(alarm.volume);
+  }
+
+  $('ring-task-title').textContent = task.titulo;
+  $('ring-task-time').textContent = task.hora;
+  $('ring-mode-text').textContent = `Som • volume ${alarm.volume}%`;
+  $('alarm-ring-modal').classList.remove('hidden');
+
+  // A notificação principal é criada pelo Service Worker, pois é ela que
+  // permite mostrar o botão PARAR mesmo quando o app está em segundo plano.
+  if ('serviceWorker' in navigator) {
+    await notifyAlarmThroughServiceWorker(task);
+  } else if ('Notification' in window && Notification.permission === 'granted') {
+    // Fallback para navegadores sem Service Worker (sem botão de ação).
+    try {
+      new Notification('⏰ Rotina no Controle', {
+        body: `${task.hora} • ${task.titulo}`,
+        tag: `rotina-alarm-${task.id || task.hora}`,
+        renotify: true,
+        requireInteraction: true,
+        silent: false,
+        vibrate: [400, 200, 400, 200, 800]
+      });
+    } catch (e) {}
+  }
+}
+
+// A função completa de permissão fica na seção PWA acima.
+
+function checkAlarms() {
+  const now = new Date();
+  const hhmm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  const dayKey = now.toISOString().slice(0, 10);
+  let changed = false;
+  tarefas.forEach(task => {
+    const alarm = normalizeAlarm(task);
+    if (!alarm.enabled || task.feita || task.hora !== hhmm) return;
+    const stamp = `${dayKey}_${hhmm}`;
+    if (alarm.lastTriggered === stamp) return;
+    alarm.lastTriggered = stamp;
+    changed = true;
+    triggerAlarm(task);
+  });
+  if (changed) saveTasks();
+}
+
+function updateTaskAlarmVolumeLabel(value) {
+  $('task-alarm-volume-value').textContent = `${value}%`;
+}
+
+function setTaskAlarmMode(mode) {
+  taskAlarmMode = 'sound';
+  const btn = $('task-alarm-mode-sound');
+  if (btn) btn.classList.add('active');
+  unlockAlarmAudio();
+}
+
+async function testTaskAlarm() {
+  const volume = Number($('task-alarm-volume').value) || 100;
+  const ready = await unlockAlarmAudio();
+
+  if (!ready) {
+    showToast('Não foi possível ativar o áudio. Toque novamente em “Testar som” e verifique o volume de mídia do celular.', 'warning');
+    return;
+  }
+
+  const started = await startAlarmSound(volume);
+  if (!started) {
+    showToast('O áudio do alarme não pôde ser iniciado neste navegador.', 'warning');
+    return;
+  }
+
+  showToast('Teste do alarme iniciado. O som deve tocar agora.', 'success');
+  setTimeout(stopAlarm, 5000);
+}
+
+// Não tente criar o AudioContext automaticamente ao carregar a página:
+// o Android/Chrome pode deixá-lo suspenso. O primeiro toque do usuário
+// desbloqueia o áudio e, depois disso, os alarmes podem usar o mesmo contexto.
+document.addEventListener('pointerdown', () => { unlockAlarmAudio(); }, { once: true, passive: true });
+document.addEventListener('touchstart', () => { unlockAlarmAudio(); }, { once: true, passive: true });
+
+setTaskAlarmMode('sound');
+setInterval(checkAlarms, 1000);
+
+const defaultMeals = [
+  { id: 'cafe', title: 'Café da manhã', icon: 'fa-sun', color: 'amber' },
+  { id: 'almoco', title: 'Almoço', icon: 'fa-bowl-food', color: 'blue' },
+  { id: 'lanche', title: 'Lanche', icon: 'fa-cookie-bite', color: 'purple' },
+  { id: 'jantar', title: 'Jantar', icon: 'fa-moon', color: 'emerald' }
+];
+
+function saveMealRequests() {
+  // Nutrição: não persistir histórico/receitas.
+  // O resultado continua disponível somente durante a sessão atual.
+  return;
+}
+
+/*
+ * REGRA PRINCIPAL:
+ * O texto digitado em "O que você quer?" é SOMENTE o pedido do usuário.
+ * A receita melhorada nunca deve simplesmente repetir esse texto.
+ * Ela é construída a partir do pedido, adicionando ingredientes,
+ * quantidades, preparo e uma pequena melhoria de equilíbrio.
+ */
+function estimateRecipeCalories(request, mealTitle) {
+  const text = String(request || '').toLowerCase();
+  const has = (...words) => words.some(w => text.includes(w));
+
+  // Estimativa simples por porção. O app deixa explícito que não é um valor clínico.
+  if (has('ovo', 'ovos')) {
+    let kcal = 210; // ovos + gordura do preparo + vegetais
+    if (has('pão', 'pão')) kcal += 160;
+    if (has('banana')) kcal += 105;
+    if (has('queijo')) kcal += 80;
+    return kcal;
+  }
+  if (has('pão', 'pão')) {
+    let kcal = 360; // pão + proteína + vegetais + fruta
+    if (has('queijo')) kcal += 70;
+    if (has('ovo', 'ovos')) kcal += 70;
+    return kcal;
+  }
+  if (has('arroz') && has('feijão')) return 530;
+  if (has('frango')) {
+    let kcal = 410;
+    if (has('arroz')) kcal += 40;
+    if (has('batata')) kcal += 20;
+    return kcal;
+  }
+  if (has('macarrão', 'macarrao', 'massa')) return 460;
+  if (has('banana')) return 280;
+  if (has('tapioca')) return has('ovo', 'ovos') ? 360 : 300;
+  if (has('atum')) return 380;
+  if (has('peixe', 'salmão', 'salmao')) return 420;
+  if (has('carne', 'bife', 'patinho')) return 480;
+  if (has('salada')) return 260;
+  if (has('iogurte')) return 300;
+  if (has('aveia')) return 320;
+  if (has('panqueca', 'pancake')) return 390;
+  if (has('batata')) return 350;
+
+  // Faixa padrão para pedidos livres. Mantemos como ESTIMATIVA.
+  return mealTitle === 'Lanche' ? 300 : 420;
+}
+
+function buildImprovedRecipe(request, mealTitle) {
+  const original = request.trim();
+  if (!original) return null;
+
+  const text = original.toLowerCase();
+
+  const has = (...words) => words.some(w => text.includes(w));
+
+  let ingredients = [];
+  let preparation = '';
+  let title = '';
+
+  if (has('ovo', 'ovos')) {
+    ingredients = ['2 ovos', '1 colher de chá de azeite ou manteiga', '1 porção de tomate ou outra verdura', '1 pitada de sal e pimenta'];
+    if (has('pão', 'pão')) ingredients.push('1–2 fatias de pão integral');
+    if (has('banana')) ingredients.push('1 banana');
+    preparation = 'Bata os ovos, aqueça uma frigideira e prepare-os em fogo baixo, mexendo até ficarem cremosos. Sirva com os acompanhamentos que você pediu e acrescente tomate ou outra verdura para deixar a refeição mais completa.';
+    title = 'Ovos preparados com acompanhamento equilibrado';
+  } else if (has('pão', 'pão')) {
+    ingredients = ['2 fatias de pão integral', '1 fonte de proteína (ovo, queijo branco ou frango desfiado)', 'tomate ou folhas', '1 fruta de sua preferência'];
+    preparation = 'Toste levemente o pão e monte com uma fonte de proteína e vegetais. Sirva com uma fruta para complementar a refeição.';
+    title = 'Sanduíche de pão integral melhorado';
+  } else if (has('arroz') && has('feijão')) {
+    ingredients = ['3–4 colheres de sopa de arroz', '1 concha pequena de feijão', '1 porção de frango, carne magra ou ovos', 'salada variada', '1 fio de azeite'];
+    preparation = 'Aqueça o arroz e o feijão. Prepare a proteína grelhada ou cozida com pouco óleo e sirva com uma porção generosa de salada. Assim, o prato mantém o que você pediu e fica mais completo.';
+    title = 'Prato de arroz e feijão mais equilibrado';
+  } else if (has('frango')) {
+    ingredients = ['1 filé de frango', '3–4 colheres de sopa de arroz, batata ou outro carboidrato', 'salada ou legumes variados', '1 fio de azeite', 'temperos naturais a gosto'];
+    preparation = 'Tempere o frango e grelhe até ficar bem cozido. Prepare o acompanhamento e sirva com legumes ou salada. O resultado mantém o frango como protagonista, mas deixa a refeição mais completa.';
+    title = 'Frango grelhado com acompanhamento completo';
+  } else if (has('macarrão', 'macarrao', 'massa')) {
+    ingredients = ['1 porção de macarrão', '1 fonte de proteína, como frango, atum ou ovo', 'tomate e outros vegetais', '1 colher de chá de azeite', 'ervas e temperos a gosto'];
+    preparation = 'Cozinhe o macarrão até ficar al dente. Refogue rapidamente os vegetais, junte a proteína e misture à massa. Finalize com ervas e pouco azeite.';
+    title = 'Macarrão completo com proteína e vegetais';
+  } else if (has('banana')) {
+    ingredients = ['1 banana', '2 colheres de sopa de aveia', '1 fonte de proteína, como iogurte natural ou leite', 'canela a gosto'];
+    preparation = 'Fatie a banana, misture com a aveia e acrescente iogurte natural ou leite. Finalize com canela. Se quiser, aqueça por alguns minutos para ficar cremoso.';
+    title = 'Banana com aveia em versão mais completa';
+  } else if (has('tapioca')) {
+    ingredients = ['1 tapioca média', '1 fonte de proteína, como 2 ovos ou queijo branco', 'tomate ou folhas', '1 fruta pequena'];
+    preparation = 'Prepare a tapioca na frigideira e recheie com uma fonte de proteína. Acrescente tomate ou folhas e finalize com uma fruta para completar a refeição.';
+    title = 'Tapioca recheada em versão mais completa';
+  } else if (has('salada')) {
+    ingredients = ['folhas variadas', '1 fonte de proteína, como frango, atum ou ovos', 'legumes coloridos', '1 fio de azeite', 'limão e ervas a gosto'];
+    preparation = 'Higienize e corte os vegetais. Adicione a proteína, tempere com limão e ervas e finalize com um fio de azeite.';
+    title = 'Salada completa com proteína';
+  } else if (has('iogurte')) {
+    ingredients = ['1 pote de iogurte natural', '2 colheres de sopa de aveia', '1 fruta picada', 'canela a gosto'];
+    preparation = 'Coloque o iogurte em uma tigela, adicione a fruta e a aveia e finalize com canela.';
+    title = 'Iogurte com fruta e aveia';
+  } else if (has('panqueca', 'pancake')) {
+    ingredients = ['1 ovo', '2 colheres de sopa de aveia', '1 fruta ou vegetal de sua preferência', '1 colher de chá de azeite ou manteiga'];
+    preparation = 'Misture os ingredientes principais até formar uma massa. Cozinhe em fogo baixo numa frigideira antiaderente e vire quando a base estiver firme.';
+    title = 'Panqueca caseira em versão equilibrada';
+  } else {
+    ingredients = [original, '1 fonte de proteína', '1 porção de vegetais ou fruta', 'temperos naturais a gosto'];
+    preparation = `Prepare ${original} da forma que normalmente seria feito, mas complemente a refeição com uma fonte de proteína e uma porção de vegetais ou fruta. Ajuste o sal e o óleo para manter o preparo simples e equilibrado.`;
+    title = `${original.charAt(0).toUpperCase() + original.slice(1)} — versão melhorada`;
+  }
+
+  return {
+    title,
+    ingredients: ingredients.join(' • '),
+    preparation,
+    calories: estimateRecipeCalories(original, mealTitle),
+    note: `Adaptado ao seu pedido de ${mealTitle.toLowerCase()}.`
+  };
+}
+
+function recipeResultMarkup(recipe) {
+  return `
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0 flex-1">
+        <div class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">Receita melhorada</div>
+        <h4 class="text-lg font-extrabold mt-2 leading-tight">${esc(recipe.title)}</h4>
+      </div>
+      <div class="shrink-0 rounded-2xl bg-orange-500/10 border border-orange-500/15 px-3 py-2.5 text-center min-w-[92px]">
+        <div class="text-lg font-extrabold text-orange-300">≈ ${Math.round(recipe.calories)}</div>
+        <div class="text-[8px] uppercase tracking-widest font-bold text-gray-500 mt-0.5">kcal / porção</div>
+      </div>
+    </div>
+
+    <div class="mt-4 grid gap-3 sm:grid-cols-2">
+      <div class="rounded-2xl bg-white/[.025] border border-white/5 p-3.5">
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Ingredientes</div>
+        <p class="text-[11px] text-gray-300 leading-5">${esc(recipe.ingredients)}</p>
+      </div>
+      <div class="rounded-2xl bg-white/[.025] border border-white/5 p-3.5">
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Como preparar</div>
+        <p class="text-[11px] text-gray-300 leading-5">${esc(recipe.preparation)}</p>
+      </div>
+    </div>
+
+    <div class="mt-3 flex items-start gap-2 rounded-xl bg-blue-500/5 border border-blue-500/10 p-3 text-[10px] text-blue-200 leading-4">
+      <i class="fa-solid fa-circle-info text-blue-400 mt-0.5"></i>
+      <span>${esc(recipe.note)} As calorias são uma estimativa por porção e podem variar conforme ingredientes e quantidades.</span>
+    </div>
+  `;
+}
+
+function renderMealCards() {
+  const container = $('meal-cards');
+  if (!container) return;
+
+  container.innerHTML = defaultMeals.map(meal => {
+    const request = mealRequests[meal.id] || '';
+    const recipe = request ? buildImprovedRecipe(request, meal.title) : null;
+
+    return `
+      <div class="glass rounded-[24px] p-5 overflow-hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-${meal.color}-500/10 text-${meal.color}-400 flex items-center justify-center">
+            <i class="fa-solid ${meal.icon}"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Refeição</div>
+            <h3 class="text-xl font-extrabold">${esc(meal.title)}</h3>
+          </div>
+        </div>
+
+        <label class="label">O que você quer?</label>
+        <input
+          id="meal-input-${meal.id}"
+          class="input"
+          value="${esc(request)}"
+          placeholder="Ex: ovos mexidos com pão integral e banana"
+          oninput="updateMealRequest('${meal.id}', this.value)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();melhorarReceita('${meal.id}')}"
+        >
+
+        <div id="recipe-${meal.id}" class="${recipe ? '' : 'hidden'} mt-4 rounded-[22px] bg-white/[.03] border border-white/5 p-4">
+          ${recipe ? recipeResultMarkup(recipe) : ''}
+        </div>
+
+        <button type="button" onclick="melhorarReceita('${meal.id}')"
+          class="w-full mt-3 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition active:scale-[.98] flex items-center justify-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar receita + calorias
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateMealRequest(id, value) {
+  mealRequests[id] = value;
+  saveMealRequests();
+}
+
+function melhorarReceita(id) {
+  const meal = defaultMeals.find(x => x.id === id);
+  const input = $(`meal-input-${id}`);
+  const request = input ? input.value.trim() : '';
+
+  if (!meal) return;
+
+  if (!request) {
+    showToast('Escreva primeiro o que você quer comer.', 'warning');
+    input?.focus();
+    return;
+  }
+
+  mealRequests[id] = request;
+  saveMealRequests();
+
+  const recipe = buildImprovedRecipe(request, meal.title);
+  const box = $(`recipe-${id}`);
+  if (!box || !recipe) return;
+
+  box.classList.remove('hidden');
+  box.innerHTML = recipeResultMarkup(recipe);
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  showToast('Receita melhorada com calorias estimadas por porção.', 'success');
+}
+
+function adicionarRefeicaoPersonalizada() {
+  showToast('As quatro refeições principais já estão prontas para você personalizar.', 'info');
+}
+
+function gerarCardapio() {
+  renderMealCards();
+  showToast('Digite o que você quer em cada refeição e toque em “Melhorar receita”.', 'info');
+}
+
+function scannerEscaparJson(text) {
+  return String(text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+}
+
+function formatarCalorias(valor) {
+  const n = Number(String(valor ?? '').replace(',', '.'));
+  return Number.isFinite(n) && n > 0 ? `${Math.round(n)} kcal` : 'estimativa não disponível';
+}
+
+function normalizarScannerResultado(raw) {
+  let data = raw;
+  if (typeof raw === 'string') {
+    try { data = JSON.parse(scannerEscaparJson(raw)); }
+    catch { return null; }
+  }
+  if (!data || typeof data !== 'object') return null;
+  return {
+    is_food: data.is_food === true,
+    ingredients: Array.isArray(data.ingredients) ? data.ingredients.map(String).filter(Boolean).slice(0, 12) : [],
+    recipe_name: String(data.recipe_name || '').trim(),
+    recipe: String(data.recipe || '').trim(),
+    calories_per_serving: data.calories_per_serving,
+    servings: Number(data.servings) || 1,
+    note: String(data.note || '').trim()
+  };
+}
+
+function clearScannerSessionState(removeLegacyGuestMemory = false) {
+  // Zera somente o estado em memória e a interface do Scanner.
+  // O histórico de uma conta Gmail continua salvo na chave exclusiva dela.
+  scannerHistory = [];
+
+  if (removeLegacyGuestMemory) {
+    // Remove somente chaves antigas sem identificação de Gmail, se existirem.
+    // Isso evita que uma versão anterior compartilhe histórico com o Convidado.
+    try {
+      localStorage.removeItem('rotina_scanner_history_v1');
+      localStorage.removeItem('rotina_scanner_history');
+    } catch (e) {}
+  }
+
+  const preview = $('scanner-preview');
+  const results = $('scanner-results');
+  const img = $('scanned-img');
+  const status = $('scanner-status');
+
+  if (preview) preview.classList.add('hidden');
+  if (results) {
+    results.classList.add('hidden');
+    results.innerHTML = '';
+  }
+  if (img) img.removeAttribute('src');
+  if (status) {
+    status.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-purple-400"></i><span>Analisando alimentos...</span>';
+  }
+
+  if ($('camera-input')) $('camera-input').value = '';
+  if ($('gallery-input')) $('gallery-input').value = '';
+
+  renderScannerHistory();
+}
+
+function saveScannerHistory() {
+  // Scanner: não persistir histórico. A API e a análise permanecem inalteradas.
+  return;
+}
+
+function addScannerHistory(result) {
+  // Scanner: nenhum resultado é colocado na memória/histórico.
+  // A análise e a API do Scanner permanecem exatamente iguais.
+  scannerHistory = [];
+  renderScannerHistory();
+}
+
+function renderScannerHistory() {
+  const box = $('scanner-history');
+  const counter = $('scanner-memory-counter');
+  if (!box) return;
+
+  if (!currentUser) {
+    if (counter) counter.textContent = 'sem memória';
+    box.innerHTML = `<div class="rounded-2xl bg-white/[.03] border border-white/5 p-4 text-center"><i class="fa-solid fa-user-clock text-gray-600 text-lg"></i><p class="text-[10px] text-gray-500 mt-2">Abra o app para usar a memória do Scanner.</p></div>`;
+    return;
+  }
+
+  if (counter) counter.textContent = `${scannerHistory.length} ${scannerHistory.length === 1 ? 'scan' : 'scans'}`;
+
+  if (!scannerHistory.length) {
+    box.innerHTML = `
+      <div class="rounded-2xl bg-white/[.03] border border-white/5 p-4 text-center">
+        <i class="fa-solid fa-camera-retro text-gray-600 text-lg"></i>
+        <p class="text-[10px] text-gray-500 mt-2">Nenhum scan salvo ainda nesta conta.</p>
+      </div>`;
+    return;
+  }
+
+  box.innerHTML = scannerHistory.map(item => {
+    const date = item.createdAt ? new Date(item.createdAt) : null;
+    const when = date && !Number.isNaN(date.getTime())
+      ? date.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+      : '';
+
+    const ingredients = (item.ingredients || []).slice(0, 5).map(i =>
+      `<span class="inline-flex px-2 py-1 rounded-lg bg-white/[.04] border border-white/5 text-[9px] text-gray-300">${esc(i)}</span>`
+    ).join('');
+
+    return `
+      <div class="rounded-2xl bg-white/[.025] border border-white/5 p-3.5">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-[9px] text-gray-600">${esc(when)}</div>
+            <div class="text-sm font-bold mt-1 truncate">${esc(item.recipe_name || 'Resultado do Scanner')}</div>
+          </div>
+          <div class="shrink-0 px-2.5 py-1.5 rounded-xl bg-orange-500/10 border border-orange-500/10 text-orange-300 text-[10px] font-extrabold">
+            ${formatarCalorias(item.calories_per_serving)}
+          </div>
+        </div>
+        ${ingredients ? `<div class="flex flex-wrap gap-1 mt-3">${ingredients}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function renderizarScannerResultado(result) {
+  const box = $('scanner-results');
+  if (!box) return;
+
+  if (!result || !result.is_food) {
+    box.innerHTML = `
+      <div class="rounded-2xl bg-amber-500/10 border border-amber-500/15 p-4">
+        <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+          <i class="fa-solid fa-circle-exclamation"></i> Não encontrei alimentos
+        </div>
+        <p class="text-[11px] text-gray-400 leading-5 mt-2">
+          O Scanner funciona somente com alimentos ou ingredientes. Tire uma foto de frutas, verduras, carnes, ovos, arroz, feijão ou outros alimentos.
+        </p>
+      </div>`;
+    return;
+  }
+
+  const ingredients = result.ingredients.length
+    ? result.ingredients.map(i => `<span class="inline-flex px-2.5 py-1 rounded-lg bg-white/[.04] border border-white/5 text-[10px] text-gray-300">${esc(i)}</span>`).join('')
+    : '<span class="text-[11px] text-gray-500">Ingredientes identificados na imagem.</span>';
+
+  box.innerHTML = `
+    <div class="rounded-2xl bg-white/[.03] border border-white/5 p-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <div class="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">Receita sugerida</div>
+          <h3 class="text-lg font-extrabold mt-1">${esc(result.recipe_name || 'Receita com seus ingredientes')}</h3>
+        </div>
+        <div class="shrink-0 px-3 py-2 rounded-xl bg-orange-500/10 border border-orange-500/15 text-orange-300 text-xs font-extrabold">
+          ${formatarCalorias(result.calories_per_serving)}
+          <div class="text-[8px] font-medium text-gray-500 mt-0.5">por porção</div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Alimentos encontrados</div>
+        <div class="flex flex-wrap gap-1.5">${ingredients}</div>
+      </div>
+
+      <div class="mt-4">
+        <div class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Como preparar</div>
+        <p class="text-[11px] text-gray-300 leading-5 whitespace-pre-line">${esc(result.recipe || 'A IA não conseguiu montar uma receita com segurança.')}</p>
+      </div>
+
+      ${result.note ? `<div class="mt-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/10 text-[10px] text-purple-200 leading-4"><i class="fa-solid fa-wand-magic-sparkles mr-1 text-purple-400"></i>${esc(result.note)}</div>` : ''}
+    </div>`;
+}
+
+function prepararImagemParaIA(dataUrl, maxSide = 1600, quality = 0.82) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext('2d', { alpha: false });
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+/* ====================================================================
+   INTEGRAÇÃO OPENROUTER — BACKEND SEGURO
+   ====================================================================
+   O navegador não recebe a chave da OpenRouter. O HTML chama o backend
+   local /api, e o backend mantém OPENROUTER_API_KEY em variável de ambiente.
+   ==================================================================== */
+const OPENROUTER_API_BASE = (window.__ROTINA_API_BASE__ || '/api').replace(/\/$/, '');
+
+async function openRouterFetch(path, body, options = {}) {
+  const url = `${OPENROUTER_API_BASE}${path}`;
+  let response;
+  try {
+    response = await fetch(url, {
+      method: options.method || 'POST',
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      cache: 'no-store'
+    });
+  } catch (error) {
+    const err = new Error('Não foi possível conectar ao servidor da IA. Verifique se o backend está publicado e tente novamente.');
+    err.code = 'NETWORK_ERROR';
+    throw err;
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const err = new Error(data?.error?.message || data?.message || `Erro HTTP ${response.status}`);
+    err.status = response.status;
+    err.code = data?.error?.code || data?.code || '';
+    throw err;
+  }
+  return data;
+}
+
+async function analisarIngredientesComOpenRouter(dataUrl) {
+  if (!/^data:image\//i.test(String(dataUrl || ''))) {
+    throw new Error('A imagem não pôde ser preparada para análise.');
+  }
+
+  const prompt = `
+Você é o scanner de alimentos do app Rotina no Controle.
+Analise SOMENTE o conteúdo visual da imagem.
+
+REGRA PRINCIPAL:
+- Se a imagem não mostrar claramente alimentos ou ingredientes alimentares, responda is_food=false.
+- Não trate pessoas, animais, objetos, roupas, eletrônicos, documentos, paisagens, móveis ou embalagens vazias como alimentos.
+- Se houver uma embalagem de alimento e o rótulo permitir identificar claramente o alimento, pode considerar o alimento.
+- Não invente ingredientes que não possam ser identificados visualmente.
+
+Se is_food=true:
+1. Liste os alimentos/ingredientes visíveis ou claramente identificáveis.
+2. Crie UMA receita simples usando principalmente esses ingredientes.
+3. Informe calorias ESTIMADAS por porção.
+4. Não invente quantidades exatas que não podem ser vistas.
+5. Responda em português do Brasil.
+
+RETORNE SOMENTE JSON VÁLIDO, sem markdown:
+{
+  "is_food": true,
+  "ingredients": ["..."],
+  "recipe_name": "...",
+  "recipe": "passo a passo curto",
+  "calories_per_serving": 0,
+  "servings": 1,
+  "note": "Calorias estimadas; o valor real varia conforme quantidade e preparo."
+}
+
+Para imagem sem alimento:
+{
+  "is_food": false,
+  "ingredients": [],
+  "recipe_name": "",
+  "recipe": "",
+  "calories_per_serving": 0,
+  "servings": 0,
+  "note": "A imagem não mostra alimentos suficientes para análise."
+}`.trim();
+
+  const data = await openRouterFetch('/scanner', {
+    image_data_url: dataUrl,
+    prompt
+  });
+
+  const result = normalizarScannerResultado(data?.result || data?.response || data?.content || data?.text || '');
+  if (!result) throw new Error('A IA respondeu, mas não enviou um resultado válido para o Scanner.');
+  return result;
+}
+
+async function processarFoto(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showToast('Escolha uma foto de alimentos.', 'warning');
+    event.target.value = '';
+    return;
+  }
+
+  const preview = $('scanner-preview');
+  const img = $('scanned-img');
+  const status = $('scanner-status');
+  const results = $('scanner-results');
+
+  results.innerHTML = '';
+  results.classList.add('hidden');
+  preview.classList.remove('hidden');
+  status.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-purple-400"></i><span>Preparando a foto...</span>';
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const optimized = await prepararImagemParaIA(e.target.result, 1280, 0.78);
+      img.src = optimized;
+      status.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-purple-400"></i><span>Identificando os alimentos e criando sua receita...</span>';
+
+      const result = await analisarIngredientesComOpenRouter(optimized);
+
+      if (result.is_food) {
+        status.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i><span>Alimentos identificados. Receita pronta!</span>';
+        renderizarScannerResultado(result);
+        results.classList.remove('hidden');
+        addScannerHistory(result);
+        showToast('Receita criada com seus alimentos.', 'success');
+      } else {
+        status.innerHTML = '<i class="fa-solid fa-circle-info text-amber-400"></i><span>Essa imagem não foi identificada como alimento.</span>';
+        renderizarScannerResultado(result);
+        results.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Erro no Scanner:', error);
+      status.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i><span>Não foi possível analisar a foto.</span>';
+      results.classList.remove('hidden');
+      const scannerMessage = error?.status === 401 || error?.status === 403
+        ? 'O servidor da IA está sem uma chave OpenRouter válida. Configure OPENROUTER_API_KEY no backend.'
+        : (error?.status === 429
+          ? 'A IA atingiu o limite gratuito temporário. Aguarde um pouco e tente novamente.'
+          : (error?.status === 402
+            ? 'A conta está sem acesso a um modelo gratuito neste momento. Use um modelo free e verifique a conta OpenRouter.'
+            : (error?.message || 'Verifique a conexão do servidor e tente novamente.')));
+      results.innerHTML = `
+        <div class="rounded-2xl bg-red-500/10 border border-red-500/15 p-4">
+          <div class="text-xs font-bold text-red-300">Scanner não conseguiu analisar</div>
+          <p class="text-[10px] text-gray-400 leading-5 mt-2">${esc(scannerMessage)}</p>
+        </div>`;
+    } finally {
+      event.target.value = '';
+    }
+  };
+
+  reader.onerror = () => {
+    status.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i><span>Não foi possível ler a foto.</span>';
+    results.classList.remove('hidden');
+    results.innerHTML = '<div class="rounded-2xl bg-red-500/10 border border-red-500/15 p-4"><div class="text-xs font-bold text-red-300">Scanner não conseguiu analisar</div><p class="text-[10px] text-gray-400 leading-5 mt-2">Não foi possível ler o arquivo de imagem.</p></div>';
+    event.target.value = '';
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* ====================================================================
+   ASSISTENTE OPENROUTER — CLIENTE
+   ==================================================================== */
+let conversationHistory = [];
+let assistantBusy = false;
+
+function getChatStorageKey() {
+  return null;
+}
+
+function loadCurrentUserChatHistory() {
+  conversationHistory = [];
+}
+
+function saveCurrentUserChatHistory() {
+  return;
+}
+
+function clearCurrentUserChatState() {
+  conversationHistory = [];
+  assistantBusy = false;
+}
+
+async function verificarConexaoIA() {
+  const badge = $('api-status-badge');
+  if (!badge) return;
+
+  badge.className = 'text-[10px] text-gray-500';
+  badge.textContent = '● Verificando conexão...';
+
+  try {
+    const data = await openRouterFetch('/health', undefined, { method: 'GET', headers: {} });
+    if (!data?.ok) throw new Error('Servidor da IA não está pronto.');
+    badge.className = 'text-[10px] text-emerald-400';
+    badge.textContent = '● OpenRouter conectado • gratuito';
+  } catch (error) {
+    badge.className = 'text-[10px] text-red-400';
+    if (error?.status === 401 || error?.status === 403) {
+      badge.textContent = '● OpenRouter sem autenticação';
+    } else if (error?.status === 429) {
+      badge.className = 'text-[10px] text-amber-400';
+      badge.textContent = '● OpenRouter temporariamente limitado';
+    } else {
+      badge.textContent = '● OpenRouter indisponível';
+    }
+    console.error('Verificação OpenRouter:', error);
+  }
+}
+
+function initChat() {
+  const container = $('chat-messages');
+  container.innerHTML = '';
+  clearCurrentUserChatState();
+  loadCurrentUserChatHistory();
+  verificarConexaoIA();
+
+  appendMessage('assistant', 'Olá! Sou o assistente do Rotina no Controle. Esta conversa fica apenas durante esta sessão e não é salva.');
+}
+
+function appendMessage(sender, text, save = true) {
+  const container = $('chat-messages');
+  const isUser = sender === 'user';
+  const div = document.createElement('div');
+  div.className = `flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`;
+  div.innerHTML = `
+    <div class="w-8 h-8 rounded-xl ${isUser ? 'bg-purple-600/20 text-purple-300' : 'gradient text-white'} flex items-center justify-center shrink-0">
+      <i class="fa-solid ${isUser ? 'fa-user text-xs' : 'fa-robot text-sm'}"></i>
+    </div>
+    <div class="max-w-[80%] rounded-2xl px-4 py-3 text-xs leading-5 ${isUser ? 'bg-purple-600 text-white rounded-tr-none' : 'glass border border-white/5 text-gray-200 rounded-tl-none'}">
+      ${esc(text).replace(/\n/g, '<br>')}
+    </div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+
+  if (save) {
+    conversationHistory.push({ role: isUser ? 'user' : 'model', text });
+    saveCurrentUserChatHistory();
+  }
+}
+
+async function sendChat() {
+  const input = $('chat-input');
+  const text = input.value.trim();
+  if (!text || assistantBusy) return;
+
+  input.value = '';
+  appendMessage('user', text);
+  assistantBusy = true;
+
+  const container = $('chat-messages');
+  const loadingId = 'loading-' + Date.now();
+  const loadingDiv = document.createElement('div');
+  loadingDiv.id = loadingId;
+  loadingDiv.className = 'flex gap-3';
+  loadingDiv.innerHTML = `
+    <div class="w-8 h-8 rounded-xl gradient text-white flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-robot text-sm"></i>
+    </div>
+    <div class="glass border border-white/5 rounded-2xl rounded-tl-none px-4 py-3 text-xs text-gray-400 flex items-center gap-2">
+      <i class="fa-solid fa-spinner fa-spin text-purple-400"></i><span>Pensando...</span>
+    </div>
+  `;
+  container.appendChild(loadingDiv);
+  container.scrollTop = container.scrollHeight;
+
+  try {
+    const messages = conversationHistory
+      .filter(m => m.role === 'user' || m.role === 'model')
+      .map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.text }));
+
+    const data = await openRouterFetch('/assistant', {
+      messages,
+      system: 'Você é o Rotina no Controle, um assistente virtual especialista em produtividade, organização de rotina e nutrição. Dê respostas práticas, acolhedoras, objetivas e formatadas em português do Brasil.'
+    });
+
+    document.getElementById(loadingId)?.remove();
+    const reply = String(data?.reply || '').trim();
+    if (!reply) throw new Error('A IA não retornou texto.');
+
+    appendMessage('assistant', reply);
+    const badge = $('api-status-badge');
+    if (badge) {
+      badge.className = 'text-[10px] text-emerald-400';
+      badge.textContent = `● OpenRouter conectado • ${data?.model || 'modelo gratuito'}`;
+    }
+  } catch (err) {
+    document.getElementById(loadingId)?.remove();
+    const badge = $('api-status-badge');
+    if (badge) {
+      badge.className = err?.status === 429 ? 'text-[10px] text-amber-400' : 'text-[10px] text-red-400';
+      badge.textContent = err?.status === 429 ? '● OpenRouter temporariamente limitado' : '● OpenRouter indisponível';
+    }
+
+    let message = err?.message || 'Não foi possível falar com a IA agora.';
+    if (err?.status === 401 || err?.status === 403) {
+      message = 'O servidor ainda não está autenticado na OpenRouter. Configure OPENROUTER_API_KEY no backend.';
+    } else if (err?.status === 429) {
+      message = 'A IA atingiu o limite gratuito temporário. Aguarde um pouco e tente novamente.';
+    } else if (err?.status === 402) {
+      message = 'O modelo gratuito não está disponível para esta requisição. Verifique se a conta OpenRouter está usando um modelo free.';
+    }
+    appendMessage('assistant', message);
+  } finally {
+    assistantBusy = false;
+  }
+}
+
+
+/* ====================================================================
+   INICIALIZAÇÃO E ENTRADA RESILIENTE
+   ==================================================================== */
+function initializeRotinaNoControle() {
+  try {
+    const savedUser = safeGetStorage(STORAGE.currentUser, null);
+    if (savedUser && typeof savedUser === 'object' && (savedUser.isGuest === true || savedUser.gmail)) {
+      currentUser = savedUser;
+      openApp();
+      return;
+    }
+  } catch (error) {
+    console.error('Sessão salva inválida:', error);
+    currentUser = null;
+  }
+
+  $('auth-screen')?.classList.remove('hidden');
+  $('app')?.classList.add('hidden');
+  showAuthStep('initial');
+}
+
+function bindAuthButtons() {
+  const initial = $('auth-view-initial');
+  if (!initial) return;
+
+  const buttons = initial.querySelectorAll('button[type="button"]');
+  if (buttons.length >= 3) {
+    buttons[0].addEventListener('click', () => showAuthStep('signup'));
+    buttons[1].addEventListener('click', () => showAuthStep('login'));
+    buttons[2].addEventListener('click', () => enterAsGuest());
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    bindAuthButtons();
+    initializeRotinaNoControle();
+  }, { once: true });
+} else {
+  bindAuthButtons();
+  initializeRotinaNoControle();
+}
+</script>
+</body>
+</html>

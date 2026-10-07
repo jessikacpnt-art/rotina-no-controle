@@ -1,0 +1,12 @@
+{
+  "name": "rotina-no-controle-openrouter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rotina no Controle com Assistente e Scanner via OpenRouter Free Models",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
